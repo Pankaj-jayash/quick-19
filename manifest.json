@@ -1,49 +1,46 @@
 {
   "name": "Quick Dukan - किराना दुकान",
   "short_name": "Quick Dukan",
-  "description": "आपकी विश्वसनीय किराना दुकान - फ्री डिलीवरी, ऑफलाइन सपोर्ट और लाइव ऑर्डर ट्रैकिंग",
-  "id": "/Quick-Dukan/",
-  "start_url": "/Quick-Dukan/index.html?source=pwa",
+  "description": "आपकी विश्वसनीय किराना दुकान - फ्री डिलीवरी",
+  "start_url": "/Quick-Dukan/",
   "scope": "/Quick-Dukan/",
   "display": "standalone",
-  "display_override": ["standalone", "fullscreen", "minimal-ui"],
   "orientation": "portrait-primary",
   "theme_color": "#2E7D32",
   "background_color": "#FFFFFF",
-  "categories": ["shopping", "groceries", "food", "lifestyle"],
+  "categories": ["shopping", "groceries", "food"],
   "lang": "hi-IN",
   "dir": "ltr",
-  
   "icons": [
     {
       "src": "icons/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-192.png",
@@ -55,22 +52,15 @@
       "src": "icons/icon-384.png",
       "sizes": "384x384",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
       "purpose": "any maskable"
     },
-    {
-      "src": "icons/maskable-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+ {
+   "purpose": "any maskable",
+   "sizes": "512x512",
+   "src": "icons/icon-512.png",
+   "type": "image/png"
+ }
   ],
-
   "screenshots": [
     {
       "src": "screenshots/home.png",
@@ -78,34 +68,21 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Quick Dukan Home Screen"
-    },
-    {
-      "src": "screenshots/products.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Products Listing"
-    },
-    {
-      "src": "screenshots/cart.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Shopping Cart"
     }
   ],
-
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
   "shortcuts": [
     {
       "name": "सर्च करें",
       "short_name": "Search",
       "description": "प्रोडक्ट सर्च करें",
-      "url": "/Quick-Dukan/index.html?action=search&source=shortcut",
+      "url": "/Quick-Dukan/?action=search",
       "icons": [
         {
           "src": "icons/search-icon.png",
-          "sizes": "96x96",
-          "type": "image/png"
+          "sizes": "96x96"
         }
       ]
     },
@@ -113,12 +90,11 @@
       "name": "कार्ट देखें",
       "short_name": "Cart",
       "description": "अपना कार्ट देखें",
-      "url": "/Quick-Dukan/index.html?action=cart&source=shortcut",
+      "url": "/Quick-Dukan/?action=cart",
       "icons": [
         {
           "src": "icons/cart-icon.png",
-          "sizes": "96x96",
-          "type": "image/png"
+          "sizes": "96x96"
         }
       ]
     },
@@ -126,88 +102,13 @@
       "name": "मेरे ऑर्डर",
       "short_name": "Orders",
       "description": "अपने ऑर्डर देखें",
-      "url": "/Quick-Dukan/orders.html?source=shortcut",
+      "url": "/Quick-Dukan/?action=orders",
       "icons": [
         {
           "src": "icons/orders-icon.png",
-          "sizes": "96x96",
-          "type": "image/png"
+          "sizes": "96x96"
         }
       ]
-    },
-    {
-      "name": "ऑफर देखें",
-      "short_name": "Offers",
-      "description": "आज के ऑफर देखें",
-      "url": "/Quick-Dukan/index.html?action=offers&source=shortcut",
-      "icons": [
-        {
-          "src": "icons/offers-icon.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-
-  "share_target": {
-    "action": "/Quick-Dukan/share-target.html",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "name",
-      "text": "description",
-      "url": "link"
-    }
-  },
-
-  "protocol_handlers": [
-    {
-      "protocol": "web+quickdukan",
-      "url": "/Quick-Dukan/index.html?query=%s"
-    }
-  ],
-
-  "handle_links": "preferred",
-  "launch_handler": {
-    "client_mode": ["navigate-existing", "auto"]
-  },
-
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-
-  "permissions_policy": {
-    "geolocation": ["self"],
-    "camera": ["self"],
-    "microphone": ["self"],
-    "notifications": ["self"]
-  },
-
-  "gcm_sender_id": "103953800507",
-  "gcm_user_visible_only": true,
-
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "iarc_rating_id": "",
-
-  "scope_extensions": [
-    {
-      "origin": "https://quick-dukan.example.com"
-    }
-  ],
-
-  "note_taking": {
-    "new_note_url": "/Quick-Dukan/index.html?action=new-note"
-  },
-
-  "file_handlers": [
-    {
-      "action": "/Quick-Dukan/index.html?action=file-open",
-      "accept": {
-        "text/csv": [".csv"],
-        "application/json": [".json"]
-      }
     }
   ]
 }
