@@ -1,161 +1,17 @@
 // ============================================
 // CONFIG.JS - All Settings in One Place
-// Updated with PWA, Notifications, Permissions
 // ============================================
 
 const CONFIG = {
-
-    // ============ SHOP INFO ============
+    
+    // Shop Info
     shopName: 'Quick Dukan',
     shopNameHi: 'क्विक दुकान',
-    shopTagline: 'आपकी विश्वसनीय किराना दुकान',
-    shopAddress: 'आपका पता यहाँ',
-    shopPhone: '+91 9719312956',
-    shopEmail: 'support@quickdukan.com',
     
-    // ============ WHATSAPP ============
-    whatsappNumber: '919719312956', // CHANGE THIS to your WhatsApp number
-    whatsappMessage: 'Quick Dukan से ऑर्डर',
+    // WhatsApp
+    whatsappNumber: '919XXXXXXXXX', // CHANGE THIS to your WhatsApp number
     
-    // ============ GOOGLE SHEETS ============
-    googleSheets: {
-        ordersSheetId: 'YOUR_GOOGLE_SHEET_ID',
-        ordersSheetUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
-        syncInterval: 300000, // 5 minutes
-        autoSync: true
-    },
-    
-    // ============ PUSH NOTIFICATIONS ============
-    pushNotifications: {
-        enabled: true,
-        vapidPublicKey: 'YOUR_VAPID_PUBLIC_KEY_HERE',
-        gcmSenderId: '103953800507',
-        defaultIcon: 'icons/icon-192.png',
-        defaultBadge: 'icons/icon-72.png',
-        vibrationPattern: [200, 100, 200],
-        sound: 'default',
-        notificationTypes: {
-            orderUpdate: {
-                title: '📦 ऑर्डर अपडेट',
-                icon: 'icons/order-icon.png',
-                priority: 'high'
-            },
-            promotional: {
-                title: '🎉 नया ऑफर',
-                icon: 'icons/offer-icon.png',
-                priority: 'normal'
-            },
-            reminder: {
-                title: '⏰ रिमाइंडर',
-                icon: 'icons/reminder-icon.png',
-                priority: 'normal'
-            },
-            delivery: {
-                title: '🚚 डिलीवरी अपडेट',
-                icon: 'icons/delivery-icon.png',
-                priority: 'high'
-            }
-        }
-    },
-    
-    // ============ LOCAL NOTIFICATIONS ============
-    localNotifications: {
-        enabled: true,
-        cartAbandonment: {
-            enabled: true,
-            delay: 30, // minutes
-            message: 'आपका कार्ट आपका इंतज़ार कर रहा है! 🛒'
-        },
-        dailyOffers: {
-            enabled: true,
-            time: '09:00', // 9 AM
-            message: 'आज के खास ऑफर देखें! 🎉'
-        },
-        orderReminder: {
-            enabled: true,
-            message: 'आपका ऑर्डर तैयार है! 📦'
-        },
-        paymentReminder: {
-            enabled: true,
-            message: 'पेमेंट पूरा करें 💳'
-        }
-    },
-    
-    // ============ PERMISSIONS ============
-    permissions: {
-        notification: {
-            title: '🔔 नोटिफिकेशन',
-            description: 'ऑफर और ऑर्डर अपडेट पाने के लिए',
-            required: true,
-            autoRequest: true,
-            requestDelay: 3000 // 3 seconds after page load
-        },
-        location: {
-            title: '📍 लोकेशन',
-            description: 'डिलीवरी के लिए आपका पता',
-            required: true,
-            autoRequest: true,
-            requestDelay: 5000
-        },
-        camera: {
-            title: '📷 कैमरा',
-            description: 'बारकोड स्कैन करने के लिए',
-            required: false,
-            autoRequest: false
-        },
-        microphone: {
-            title: '🎤 माइक्रोफोन',
-            description: 'वॉइस सर्च के लिए',
-            required: false,
-            autoRequest: false
-        }
-    },
-    
-    // ============ SERVICE WORKER ============
-    serviceWorker: {
-        enabled: true,
-        registrationPath: '/Quick-Dukan/js/service-worker.js',
-        cacheVersion: 'v1.0.0',
-        cacheName: 'quick-dukan-cache',
-        dynamicCacheName: 'quick-dukan-dynamic',
-        updateInterval: 3600000, // 1 hour
-        autoUpdate: true,
-        offlinePage: '/Quick-Dukan/index.html'
-    },
-    
-    // ============ OFFLINE SUPPORT ============
-    offline: {
-        enabled: true,
-        cacheData: true,
-        cacheImages: true,
-        maxCacheSize: 50, // MB
-        offlineMessage: '⚠️ आप ऑफलाइन हैं - कैश्ड डेटा दिखाया जा रहा है',
-        syncOnReconnect: true
-    },
-    
-    // ============ INDEXEDDB ============
-    indexedDB: {
-        dbName: 'QuickDukanDB',
-        dbVersion: 1,
-        stores: {
-            orders: {
-                keyPath: 'id',
-                autoIncrement: true
-            },
-            cart: {
-                keyPath: 'productId'
-            },
-            userData: {
-                keyPath: 'phone'
-            },
-            notifications: {
-                keyPath: 'id',
-                autoIncrement: true
-            }
-        }
-    },
-
-    // ============ COLORS ============
+    // Colors (CSS variables are in theme.css, these are for JS reference)
     colors: {
         primary: '#6A1B9A',
         primaryLight: '#8E24AA',
@@ -164,33 +20,15 @@ const CONFIG = {
         bgCard: '#FFFFFF',
         gold: '#D4A017',
         success: '#2E7D32',
-        error: '#C62828',
-        warning: '#F57C00',
-        info: '#1976D2',
-        whatsapp: '#25D366',
-        offline: '#F44336',
-        online: '#4CAF50'
     },
-
-    // ============ LANGUAGE ============
+    
+    // Default Language
     defaultLanguage: 'hi', // 'hi' or 'en'
-    supportedLanguages: ['hi', 'en'],
     
-    // ============ ANIMATION ============
+    // Animation Speed
     animationSpeed: '0.3s',
-    animationEasing: 'ease',
     
-    // ============ SEARCH ============
-    search: {
-        minChars: 1,
-        maxResults: 10,
-        debounceDelay: 300,
-        spellCorrection: true,
-        voiceSearch: true,
-        searchHistory: true,
-        maxHistoryItems: 10
-    },
-    
+    // Search
     searchPlaceholderTexts: {
         hi: [
             'आज क्या चाहिए? 😋',
@@ -213,33 +51,46 @@ const CONFIG = {
             'Want to make hot tea? ☕',
         ]
     },
-
-    // ============ PRODUCT MESSAGES ============
+    
+    // Product not found messages
     noProductMessages: {
         hi: 'अरे! यह सामान अभी नहीं है। हम जल्दी ऐड करेंगे! 😊',
         en: 'Oops! This product is not available yet. We\'ll add it soon! 😊',
     },
     
-    // ============ SECTION TITLES ============
+    // Section Titles
     sectionTitles: {
         hi: {
+            // Header Badge
             freeDelivery: 'फ्री डिलीवरी',
             verifiedTrust: 'भरोसेमंद',
+            
+            // Sections
             recentlyViewed: '🕐 हाल ही में देखा',
             mostOrders: '🔥 सबसे ज़्यादा मँगाया जाने वाला',
             allProducts: '📦 सभी प्रोडक्ट',
+            
+            // Cart
             cart: '🛒 आपका कार्ट',
             emptyCart: 'आपका कार्ट खाली है 😔',
             sendOrder: '📱 WhatsApp पर ऑर्डर भेजें',
+            
+            // Nav
             home: 'होम',
             search: 'खोजें',
             myOrders: 'मेरे ऑर्डर',
             top: 'ऊपर',
             allCategory: 'सब',
+            
+            // Search
             searchPlaceholder: 'आज क्या चाहिए? 😋',
+            
+            // Toast Messages
             addedToCart: '✅ कार्ट में जोड़ दिया!',
             removedFromCart: '🗑️ कार्ट से हटा दिया',
             orderSent: '✅ ऑर्डर WhatsApp पर भेज दिया!',
+            
+            // Orders
             ordersSubtitle: 'आपके सभी ऑर्डर यहाँ हैं',
             allOrders: 'सभी',
             pending: 'पेंडिंग',
@@ -248,6 +99,8 @@ const CONFIG = {
             noOrders: 'कोई ऑर्डर नहीं है',
             noOrdersDesc: 'अपना पहला ऑर्डर करो! 🛒',
             startShopping: '🏪 खरीदारी शुरू करें',
+            
+            // Checkout
             checkoutTitle: 'ऑर्डर कन्फर्म करें',
             checkoutSubtitle: 'डिलीवरी के लिए जानकारी भरें',
             fullName: '👤 पूरा नाम',
@@ -264,35 +117,38 @@ const CONFIG = {
             nameHint: 'जैसे: रमेश कुमार',
             phoneHint: '10 अंक का मोबाइल नंबर',
             phoneError: '⚠️ कृपया सही 10 अंक का नंबर डालें',
-            offlineMessage: '⚠️ आप ऑफलाइन हैं',
-            onlineMessage: '✅ आप ऑनलाइन हैं',
-            updateAvailable: '🔄 नया अपडेट उपलब्ध है',
-            updateNow: 'अभी अपडेट करें',
-            installApp: '📱 ऐप इंस्टॉल करें',
-            installAppDesc: 'Quick Dukan को होम स्क्रीन पर जोड़ें',
-            notificationPermission: '🔔 नोटिफिकेशन अनुमति',
-            locationPermission: '📍 लोकेशन अनुमति',
-            syncing: '🔄 सिंक हो रहा है...',
-            synced: '✅ सिंक हो गया'
         },
         en: {
+            // Header Badge
             freeDelivery: 'Free Delivery',
             verifiedTrust: 'Trusted',
+            
+            // Sections
             recentlyViewed: '🕐 Recently Viewed',
             mostOrders: '🔥 Most Ordered',
             allProducts: '📦 All Products',
+            
+            // Cart
             cart: '🛒 Your Cart',
             emptyCart: 'Your cart is empty 😔',
             sendOrder: '📱 Send Order on WhatsApp',
+            
+            // Nav
             home: 'Home',
             search: 'Search',
             myOrders: 'My Orders',
             top: 'Top',
             allCategory: 'All',
+            
+            // Search
             searchPlaceholder: 'What do you need today? 😋',
+            
+            // Toast Messages
             addedToCart: '✅ Added to cart!',
             removedFromCart: '🗑️ Removed from cart',
             orderSent: '✅ Order sent on WhatsApp!',
+            
+            // Orders
             ordersSubtitle: 'All your orders are here',
             allOrders: 'All',
             pending: 'Pending',
@@ -301,6 +157,8 @@ const CONFIG = {
             noOrders: 'No Orders Yet',
             noOrdersDesc: 'Place your first order! 🛒',
             startShopping: '🏪 Start Shopping',
+            
+            // Checkout
             checkoutTitle: 'Confirm Order',
             checkoutSubtitle: 'Fill delivery details',
             fullName: '👤 Full Name',
@@ -317,20 +175,10 @@ const CONFIG = {
             nameHint: 'e.g., Ramesh Kumar',
             phoneHint: '10 digit mobile number',
             phoneError: '⚠️ Please enter a valid 10 digit number',
-            offlineMessage: '⚠️ You are offline',
-            onlineMessage: '✅ You are online',
-            updateAvailable: '🔄 New update available',
-            updateNow: 'Update Now',
-            installApp: '📱 Install App',
-            installAppDesc: 'Add Quick Dukan to home screen',
-            notificationPermission: '🔔 Notification Permission',
-            locationPermission: '📍 Location Permission',
-            syncing: '🔄 Syncing...',
-            synced: '✅ Synced'
         }
     },
-
-    // ============ CATEGORY COLORS ============
+    
+    // Category Colors (for buttons)
     categoryColors: [
         '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
         '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
@@ -339,7 +187,7 @@ const CONFIG = {
         '#A3E4D7', '#FAD7A0', '#D2B4DE', '#A9CCE3',
     ],
     
-    // ============ LAYOUT ============
+    // Layout (can be modified from config)
     layout: {
         headerHeight: '60px',
         searchHeight: '50px',
@@ -347,11 +195,9 @@ const CONFIG = {
         bottomNavHeight: '60px',
         cardWidth: '170px',
         cardImageRatio: '56%',
-        mobileBreakpoint: '768px',
-        tabletBreakpoint: '1024px'
     },
     
-    // ============ FEATURES TOGGLE ============
+    // Features Toggle
     features: {
         darkMode: true,
         languageToggle: true,
@@ -361,97 +207,8 @@ const CONFIG = {
         backToTop: true,
         liveSearch: true,
         spellCorrection: true,
-        voiceSearch: true,
-        pullToRefresh: true,
-        floatingCart: true,
-        orderTracking: true,
-        paymentOnline: true,
-        notifications: true,
-        offlineMode: true,
-        autoUpdate: true,
-        barcodeScanner: false,
-        referralSystem: false,
-        multiLanguage: true,
-        locationTracking: true
     },
-    
-    // ============ CART SETTINGS ============
-    cart: {
-        freeDeliveryThreshold: 500,
-        deliveryCharge: 20,
-        maxQuantityPerItem: 99,
-        couponEnabled: true,
-        saveForLater: true,
-        undoDelete: true,
-        confettiEnabled: true
-    },
-    
-    // ============ ORDER SETTINGS ============
-    orders: {
-        storeOffline: true,
-        maxOfflineOrders: 50,
-        syncOnOnline: true,
-        orderExpiryDays: 30,
-        ratingEnabled: true,
-        reorderEnabled: true
-    },
-    
-    // ============ API ENDPOINTS ============
-    api: {
-        baseUrl: '/Quick-Dukan/',
-        dataUrl: '/Quick-Dukan/data/index.json',
-        productsUrl: '/Quick-Dukan/data/',
-        configUrl: '/Quick-Dukan/config/cart-config.json',
-        messagesUrl: '/Quick-Dukan/config/cart-messages.json'
-    },
-    
-    // ============ CACHE SETTINGS ============
-    cache: {
-        staticCache: 'quick-dukan-static-v1',
-        dynamicCache: 'quick-dukan-dynamic-v1',
-        imageCache: 'quick-dukan-images-v1',
-        dataCache: 'quick-dukan-data-v1',
-        maxAge: 86400, // 24 hours
-        maxEntries: 100
-    },
-    
-    // ============ ERROR MESSAGES ============
-    errors: {
-        hi: {
-            network: '🌐 नेटवर्क समस्या',
-            server: '🖥️ सर्वर समस्या',
-            timeout: '⏰ समय समाप्त',
-            invalidInput: '⚠️ गलत जानकारी',
-            permissionDenied: '🚫 अनुमति नहीं मिली',
-            notFound: '🔍 नहीं मिला',
-            offline: '📡 आप ऑफलाइन हैं'
-        },
-        en: {
-            network: '🌐 Network error',
-            server: '🖥️ Server error',
-            timeout: '⏰ Timeout',
-            invalidInput: '⚠️ Invalid input',
-            permissionDenied: '🚫 Permission denied',
-            notFound: '🔍 Not found',
-            offline: '📡 You are offline'
-        }
-    }
 };
 
-// ============ FREEZE CONFIG ============
-Object.freeze(CONFIG);
-Object.freeze(CONFIG.sectionTitles);
-Object.freeze(CONFIG.sectionTitles.hi);
-Object.freeze(CONFIG.sectionTitles.en);
-Object.freeze(CONFIG.features);
-Object.freeze(CONFIG.layout);
-Object.freeze(CONFIG.cart);
-Object.freeze(CONFIG.orders);
-Object.freeze(CONFIG.api);
-Object.freeze(CONFIG.cache);
-Object.freeze(CONFIG.colors);
-
-// ============ EXPORT FOR MODULES ============
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CONFIG;
-}
+// Freeze the object so it can't be accidentally modified
+Object.freeze(CONFIG); 
