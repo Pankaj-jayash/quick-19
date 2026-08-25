@@ -1,7 +1,6 @@
 // ============================================
-// LOGIN JS - Complete with Validation + OTP Lock
-// With iframe Popup Close (No Refresh)
-// Logout Fixed + Header Button Fixed
+// LOGIN JS - Complete Fixed with All Features
+// Password Show/Hide + Auto OTP + 28s Timer + 15min Lock
 // ============================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbzqaZojgwSAtuvQQgG-TXES5Se5Iou7PJM11alnJgMUTpj5NySV0l3hdQyqZuhv3ZAmUA/exec';
@@ -28,8 +27,16 @@ let loginLockTimerInterval = null;
 let registerLockTimerInterval = null;
 
 const MAX_OTP_ATTEMPTS = 5;
-const OTP_VALID_SECONDS = 40;
-const LOCK_MINUTES = 10;
+const OTP_VALID_SECONDS = 28; // 🎯 28 seconds
+const LOCK_MINUTES = 15; // 🎯 15 minutes
+
+// ============================================
+// PASSWORD HASH FUNCTION
+// ============================================
+function hashPassword(password) {
+    // Google Sheets number format issue solve karne ke liye
+    return 'P@ss' + password;
+}
 
 // ============================================
 // INIT
@@ -37,27 +44,106 @@ const LOCK_MINUTES = 10;
 document.addEventListener('DOMContentLoaded', () => {
     initDeviceId();
     checkExistingLogin();
+    setupPasswordToggle();
     console.log('🔐 Login Page Ready');
 });
 
-// 🆕 IFRAME POPUP CLOSE (बिना refresh)
+// ============================================
+// PASSWORD SHOW/HIDE TOGGLE
+// ============================================
+function setupPasswordToggle() {
+    // Login password toggle
+    const loginPasswordInput = document.getElementById('loginPassword');
+    if (loginPasswordInput) {
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'password-toggle';
+        toggleBtn.innerHTML = '👁️';
+        toggleBtn.style.cssText = 'position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;';
+        toggleBtn.onclick = () => togglePasswordVisibility(loginPasswordInput, toggleBtn);
+        
+        const parentDiv = loginPasswordInput.parentElement;
+        if (parentDiv) {
+            parentDiv.style.position = 'relative';
+            parentDiv.appendChild(toggleBtn);
+        }
+    }
+    
+    // Register password toggle
+    const registerPasswordInput = document.getElementById('registerPassword');
+    if (registerPasswordInput) {
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'password-toggle';
+        toggleBtn.innerHTML = '👁️';
+        toggleBtn.style.cssText = 'position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;';
+        toggleBtn.onclick = () => togglePasswordVisibility(registerPasswordInput, toggleBtn);
+        
+        const parentDiv = registerPasswordInput.parentElement;
+        if (parentDiv) {
+            parentDiv.style.position = 'relative';
+            parentDiv.appendChild(toggleBtn);
+        }
+    }
+    
+    // Register re-password toggle
+    const registerRePasswordInput = document.getElementById('registerRePassword');
+    if (registerRePasswordInput) {
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'password-toggle';
+        toggleBtn.innerHTML = '👁️';
+        toggleBtn.style.cssText = 'position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;';
+        toggleBtn.onclick = () => togglePasswordVisibility(registerRePasswordInput, toggleBtn);
+        
+        const parentDiv = registerRePasswordInput.parentElement;
+        if (parentDiv) {
+            parentDiv.style.position = 'relative';
+            parentDiv.appendChild(toggleBtn);
+        }
+    }
+    
+    // Forget password toggle
+    const forgetPasswordInput = document.getElementById('forgetNewPassword');
+    if (forgetPasswordInput) {
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'password-toggle';
+        toggleBtn.innerHTML = '👁️';
+        toggleBtn.style.cssText = 'position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;';
+        toggleBtn.onclick = () => togglePasswordVisibility(forgetPasswordInput, toggleBtn);
+        
+        const parentDiv = forgetPasswordInput.parentElement;
+        if (parentDiv) {
+            parentDiv.style.position = 'relative';
+            parentDiv.appendChild(toggleBtn);
+        }
+    }
+}
+
+function togglePasswordVisibility(inputElement, toggleBtn) {
+    if (inputElement.type === 'password') {
+        inputElement.type = 'text';
+        toggleBtn.innerHTML = '🙈';
+    } else {
+        inputElement.type = 'password';
+        toggleBtn.innerHTML = '👁️';
+    }
+}
+
+// ============================================
+// IFRAME POPUP CLOSE
+// ============================================
 function closeLoginPopupFromIframe() {
     if (window.parent !== window) {
-        // iframe में हैं - parent popup close करें
         const parentModal = window.parent.document.getElementById('loginIframeModal');
         if (parentModal) {
             parentModal.classList.add('hidden');
             window.parent.document.body.style.overflow = '';
         }
         
-        // Parent header button reset करें
         const loginBtn = window.parent.document.getElementById('loginBtn');
         if (loginBtn) {
             loginBtn.innerHTML = '<span class="login-icon">👤</span>';
             loginBtn.classList.remove('login-active');
         }
     } else {
-        // सीधे login.html खुला है
         window.location.href = 'index.html';
     }
 }
@@ -133,28 +219,26 @@ function switchAuthTab(tab) {
 }
 
 // ============================================
-// GENERATE LOGIN OTP
+// AUTO OTP GENERATE (Login)
 // ============================================
-async function generateLoginOtp() {
-    if (loginLocked) return;
-    
-    const phoneEmail = document.getElementById('loginPhoneEmail')?.value?.trim();
+async function autoGenerateLoginOtp(phoneEmail) {
+    if (loginLocked) return false;
     
     if (!phoneEmail) {
         showLoginStatus('📱 Phone या Email डालें', 'error');
-        return;
+        return false;
     }
     
     const isPhone = /^\d+$/.test(phoneEmail);
     if (isPhone) {
         if (!isValidPhone(phoneEmail)) {
             showLoginStatus('❌ सही 10 digit mobile number डालें', 'error');
-            return;
+            return false;
         }
     } else {
         if (!isValidGmail(phoneEmail)) {
             showLoginStatus('❌ Email @gmail.com होना चाहिए', 'error');
-            return;
+            return false;
         }
     }
     
@@ -169,29 +253,35 @@ async function generateLoginOtp() {
     
     startOtpTimer('login', OTP_VALID_SECONDS);
     
-    showLoginStatus(`🔐 OTP: ${loginOtpValue} (40 sec valid)`, 'pending');
+    showLoginStatus(`🔐 OTP: ${loginOtpValue} (${OTP_VALID_SECONDS} sec valid)`, 'pending');
+    console.log('🔐 Auto Login OTP:', loginOtpValue);
+    
+    return true;
 }
 
 // ============================================
-// GENERATE REGISTER OTP
+// GENERATE LOGIN OTP (Button)
 // ============================================
-async function generateRegisterOtp() {
-    if (registerLocked) return;
-    
-    const phone = document.getElementById('registerPhone')?.value?.trim();
-    
-    if (!isValidPhone(phone)) {
-        showRegisterStatus('❌ सही 10 digit mobile number डालें', 'error');
-        const phoneError = document.getElementById('registerPhoneError');
-        if (phoneError) {
-            phoneError.textContent = '10 digit mobile number डालें (6-9 से start)';
-            phoneError.classList.remove('hidden');
-        }
+async function generateLoginOtp() {
+    if (loginLocked) {
+        showLoginStatus('🔒 OTP locked! 15 मिनट बाद try करें।', 'error');
         return;
     }
     
-    const phoneError = document.getElementById('registerPhoneError');
-    if (phoneError) phoneError.classList.add('hidden');
+    const phoneEmail = document.getElementById('loginPhoneEmail')?.value?.trim();
+    await autoGenerateLoginOtp(phoneEmail);
+}
+
+// ============================================
+// AUTO OTP GENERATE (Register)
+// ============================================
+async function autoGenerateRegisterOtp(phone) {
+    if (registerLocked) return false;
+    
+    if (!isValidPhone(phone)) {
+        showRegisterStatus('❌ सही 10 digit mobile number डालें', 'error');
+        return false;
+    }
     
     registerOtpValue = Math.floor(100000 + Math.random() * 900000).toString();
     registerOtpExpired = false;
@@ -204,8 +294,23 @@ async function generateRegisterOtp() {
     
     startOtpTimer('register', OTP_VALID_SECONDS);
     
-    showRegisterStatus(`🔐 OTP: ${registerOtpValue} (40 sec valid)`, 'pending');
-    console.log('📝 Register OTP Generated:', registerOtpValue);
+    showRegisterStatus(`🔐 OTP: ${registerOtpValue} (${OTP_VALID_SECONDS} sec valid)`, 'pending');
+    console.log('📝 Auto Register OTP:', registerOtpValue);
+    
+    return true;
+}
+
+// ============================================
+// GENERATE REGISTER OTP (Button)
+// ============================================
+async function generateRegisterOtp() {
+    if (registerLocked) {
+        showRegisterStatus('🔒 OTP locked! 15 मिनट बाद try करें।', 'error');
+        return;
+    }
+    
+    const phone = document.getElementById('registerPhone')?.value?.trim();
+    await autoGenerateRegisterOtp(phone);
 }
 
 // ============================================
@@ -242,7 +347,7 @@ async function generateForgetOtp() {
     
     startOtpTimer('forget', OTP_VALID_SECONDS);
     
-    alert(`🔐 आपका OTP: ${forgetOtpValue} (40 sec valid)`);
+    alert(`🔐 आपका OTP: ${forgetOtpValue} (${OTP_VALID_SECONDS} sec valid)`);
 }
 
 // ============================================
@@ -327,17 +432,17 @@ function startLockTimer(type) {
 }
 
 // ============================================
-// LOGIN USER
+// LOGIN USER (Auto OTP + Password Hash + Attempts)
 // ============================================
 async function loginUser() {
     if (loginLocked) {
-        showLoginStatus('🔒 OTP locked! 10 मिनट बाद try करें।', 'error');
+        showLoginStatus('🔒 OTP locked! 15 मिनट बाद try करें।', 'error');
         return;
     }
     
     const phoneEmail = document.getElementById('loginPhoneEmail')?.value?.trim();
     const password = document.getElementById('loginPassword')?.value;
-    const otp = document.getElementById('loginOtp')?.value?.trim();
+    let otp = document.getElementById('loginOtp')?.value?.trim();
     
     if (!phoneEmail) {
         showLoginStatus('📱 Phone या Email डालें', 'error');
@@ -349,13 +454,22 @@ async function loginUser() {
         return;
     }
     
+    // 🎯 FIX: Agar OTP generate nahi hua to auto generate karo
+    if (!loginOtpValue || loginOtpExpired) {
+        const generated = await autoGenerateLoginOtp(phoneEmail);
+        if (!generated) return;
+        otp = ''; // OTP field khali karo
+        showLoginStatus('🔐 OTP generate हुआ है! OTP डालें और Login दबाएं।', 'pending');
+        return;
+    }
+    
     if (!otp) {
-        showLoginStatus('🔑 पहले OTP डालें! Generate करें।', 'error');
+        showLoginStatus('🔑 OTP डालें (ऊपर दिख रहा है)', 'error');
         return;
     }
     
     if (loginOtpExpired) {
-        showLoginStatus('⏱️ OTP expired! दोबारा generate करें।', 'error');
+        showLoginStatus('⏱️ OTP expired! दोबारा Login दबाएं।', 'error');
         return;
     }
     
@@ -364,7 +478,7 @@ async function loginUser() {
         document.getElementById('loginOtpAttempts').textContent = `Attempts: ${loginOtpAttempts}/${MAX_OTP_ATTEMPTS}`;
         
         if (loginOtpAttempts >= MAX_OTP_ATTEMPTS) {
-            showLoginStatus('🔒 बहुत ज्यादा गलत OTP! 10 मिनट lock।', 'error');
+            showLoginStatus('🔒 बहुत ज्यादा गलत OTP! 15 मिनट lock।', 'error');
             lockOtp('login');
             return;
         }
@@ -377,20 +491,64 @@ async function loginUser() {
     
     try {
         const deviceId = getDeviceId();
-        const response = await fetch(`${API_URL}?action=userLogin&phoneOrEmail=${encodeURIComponent(phoneEmail)}&password=${encodeURIComponent(password)}&deviceId=${deviceId}`);
-        const data = await response.json();
         
-        if (data.success) {
-            localStorage.setItem('userPhone', data.phone);
+        let cleanPhoneEmail = phoneEmail;
+        if (/^\d+$/.test(phoneEmail)) {
+            cleanPhoneEmail = phoneEmail.replace(/\D/g, '').slice(-10);
+        }
+        
+        // Password variations
+        const passwordVariations = [
+            hashPassword(password),
+            password,
+            password + '.0',
+            ' ' + password,
+            '  ' + password,
+            '   ' + password,
+            '    ' + password,
+            '     ' + password,
+            '      ' + password,
+            '       ' + password,
+        ];
+        
+        console.log('🔍 Login try:', cleanPhoneEmail);
+        
+        let loginSuccess = false;
+        let loginData = null;
+        
+        for (let i = 0; i < passwordVariations.length; i++) {
+            const tryPassword = passwordVariations[i];
+            
+            const url = `${API_URL}?action=userLogin&phoneOrEmail=${encodeURIComponent(cleanPhoneEmail)}&password=${encodeURIComponent(tryPassword)}&otp=${encodeURIComponent(otp)}&deviceId=${deviceId}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.success) {
+                console.log('✅ Password match! Variation:', i);
+                loginSuccess = true;
+                loginData = data;
+                break;
+            }
+        }
+        
+        if (loginSuccess && loginData) {
+            localStorage.setItem('userPhone', loginData.phone);
             clearInterval(loginOtpTimerInterval);
             
-            const profileResponse = await fetch(`${API_URL}?action=getUserProfile&phone=${data.phone}`);
+            document.getElementById('loginOtpDisplay').classList.add('hidden');
+            document.getElementById('loginOtpSection').classList.add('hidden');
+            document.getElementById('loginOtp').value = '';
+            document.getElementById('loginOtpValue').textContent = '------';
+            
+            showLoginStatus('✅ Login successful!', 'success');
+            
+            const profileResponse = await fetch(`${API_URL}?action=getUserProfile&phone=${loginData.phone}`);
             const profileData = await profileResponse.json();
             
             if (profileData.success) {
                 showProfile(profileData.profile);
                 
-                // 🆕 Parent header button update (सिर्फ 👤, कोई green tick नहीं)
                 if (window.parent !== window) {
                     const loginBtn = window.parent.document.getElementById('loginBtn');
                     if (loginBtn) {
@@ -400,22 +558,21 @@ async function loginUser() {
                 }
             }
         } else {
-            showLoginStatus('❌ ' + (data.message || 'Login failed'), 'error');
-            if (data.message && data.message.toLowerCase().includes('password')) {
-                document.getElementById('forgetPasswordBtn').classList.remove('hidden');
-            }
+            showLoginStatus('❌ गलत password! Password भूल गए?', 'error');
+            document.getElementById('forgetPasswordBtn').classList.remove('hidden');
         }
     } catch (error) {
+        console.log('🚫 Error:', error);
         showLoginStatus('❌ Login error', 'error');
     }
 }
 
 // ============================================
-// REGISTER USER
+// REGISTER USER (Auto OTP + Password Hash + Attempts)
 // ============================================
 async function registerUser() {
     if (registerLocked) {
-        showRegisterStatus('🔒 OTP locked! 10 मिनट बाद try करें।', 'error');
+        showRegisterStatus('🔒 OTP locked! 15 मिनट बाद try करें।', 'error');
         return;
     }
     
@@ -424,7 +581,7 @@ async function registerUser() {
     const email = document.getElementById('registerEmail')?.value?.trim();
     const password = document.getElementById('registerPassword')?.value;
     const rePassword = document.getElementById('registerRePassword')?.value;
-    const otp = document.getElementById('registerOtp')?.value?.trim();
+    let otp = document.getElementById('registerOtp')?.value?.trim();
     
     if (!name || name.length < 2) {
         showRegisterStatus('👤 नाम डालें', 'error');
@@ -451,13 +608,21 @@ async function registerUser() {
         return;
     }
     
+    // 🎯 FIX: Agar OTP generate nahi hua to auto generate karo
+    if (!registerOtpValue || registerOtpExpired) {
+        const generated = await autoGenerateRegisterOtp(phone);
+        if (!generated) return;
+        showRegisterStatus('🔐 OTP generate हुआ है! OTP डालें और Register दबाएं।', 'pending');
+        return;
+    }
+    
     if (!otp) {
-        showRegisterStatus('🔑 पहले OTP डालें! Get OTP दबाएं।', 'error');
+        showRegisterStatus('🔑 OTP डालें (ऊपर दिख रहा है)', 'error');
         return;
     }
     
     if (registerOtpExpired) {
-        showRegisterStatus('⏱️ OTP expired! दोबारा generate करें।', 'error');
+        showRegisterStatus('⏱️ OTP expired! दोबारा Register दबाएं।', 'error');
         return;
     }
     
@@ -466,7 +631,7 @@ async function registerUser() {
         document.getElementById('registerOtpAttempts').textContent = `Attempts: ${registerOtpAttempts}/${MAX_OTP_ATTEMPTS}`;
         
         if (registerOtpAttempts >= MAX_OTP_ATTEMPTS) {
-            showRegisterStatus('🔒 बहुत ज्यादा गलत OTP! 10 मिनट lock।', 'error');
+            showRegisterStatus('🔒 बहुत ज्यादा गलत OTP! 15 मिनट lock।', 'error');
             lockOtp('register');
             return;
         }
@@ -479,17 +644,21 @@ async function registerUser() {
     
     try {
         const deviceId = getDeviceId();
-        const response = await fetch(`${API_URL}?action=userRegister&phone=${phone}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&deviceId=${deviceId}`);
+        const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+        
+        const hashedPassword = hashPassword(password);
+        
+        const response = await fetch(`${API_URL}?action=userRegister&phone=${cleanPhone}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(hashedPassword)}&deviceId=${deviceId}`);
         const data = await response.json();
         
         if (data.success) {
-            localStorage.setItem('userPhone', phone);
+            localStorage.setItem('userPhone', cleanPhone);
             clearInterval(registerOtpTimerInterval);
             showRegisterStatus('✅ Registration successful!', 'success');
             
             setTimeout(() => {
                 switchAuthTab('login');
-                document.getElementById('loginPhoneEmail').value = phone;
+                document.getElementById('loginPhoneEmail').value = cleanPhone;
                 showLoginStatus('✅ अब Login करें!', 'success');
             }, 1000);
         } else {
@@ -552,7 +721,9 @@ async function resetPassword() {
     } catch (error) {}
     
     try {
-        const response = await fetch(`${API_URL}?action=forgetUserPassword&phone=${phone}&otp=${otp}&newPassword=${encodeURIComponent(newPassword)}`);
+        const hashedPassword = hashPassword(newPassword);
+        
+        const response = await fetch(`${API_URL}?action=forgetUserPassword&phone=${phone}&otp=${otp}&newPassword=${encodeURIComponent(hashedPassword)}`);
         const data = await response.json();
         
         if (data.success) {
@@ -568,7 +739,7 @@ async function resetPassword() {
 }
 
 // ============================================
-// SHOW PROFILE (Header button fix - कोई green tick नहीं)
+// SHOW PROFILE
 // ============================================
 function showProfile(profile) {
     document.getElementById('loginSection').classList.add('hidden');
@@ -589,7 +760,6 @@ function showProfile(profile) {
         document.getElementById('profileBlockReason').textContent = 'Reason: ' + (profile.blockReason || 'नहीं बताया गया');
     }
     
-    // 🆕 Parent header button - सिर्फ 👤 icon
     if (window.parent !== window) {
         const loginBtn = window.parent.document.getElementById('loginBtn');
         if (loginBtn) {
@@ -611,29 +781,24 @@ function closeForgetModal() {
 }
 
 // ============================================
-// LOGOUT (FIXED - अब काम करेगा)
+// LOGOUT
 // ============================================
 function logoutUser() {
-    // localStorage clear करें
     localStorage.removeItem('userPhone');
     
-    // iframe में हैं तो popup close + button reset
     if (window.parent !== window) {
-        // Parent popup close
         const parentModal = window.parent.document.getElementById('loginIframeModal');
         if (parentModal) {
             parentModal.classList.add('hidden');
             window.parent.document.body.style.overflow = '';
         }
         
-        // Parent header button reset
         const loginBtn = window.parent.document.getElementById('loginBtn');
         if (loginBtn) {
             loginBtn.innerHTML = '<span class="login-icon">👤</span>';
             loginBtn.classList.remove('login-active');
         }
         
-        // iframe reload (login section दिखाने के लिए)
         window.location.reload();
     } else {
         window.location.href = 'index.html';
