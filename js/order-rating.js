@@ -83,7 +83,7 @@ class OrderRating {
     console.log('⭐ Submitting rating:', this.rating, 'for order:', this.currentOrderId);
     
     const API_URL = window.googleSheetsOrders?.API_URL ||
-      'https://script.google.com/macros/s/AKfycbzqaZojgwSAtuvQQgG-TXES5Se5Iou7PJM11alnJgMUTpj5NySV0l3hdQyqZuhv3ZAmUA/exec';
+      'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
     
     try {
       const response = await fetch(`${API_URL}?action=saveRating&orderId=${this.currentOrderId}&rating=${this.rating}&comment=${encodeURIComponent(comment)}`);
