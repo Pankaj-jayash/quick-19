@@ -3,7 +3,7 @@
 // Password Show/Hide + Auto OTP + 28s Timer + 15min Lock
 // ============================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzqaZojgwSAtuvQQgG-TXES5Se5Iou7PJM11alnJgMUTpj5NySV0l3hdQyqZuhv3ZAmUA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
 
 let currentUser = { phone: '', name: '', email: '', address: '' };
 
