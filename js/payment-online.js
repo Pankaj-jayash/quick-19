@@ -2,17 +2,18 @@
 // PAYMENT-ONLINE.JS - Complete Online Payment
 // Google Sheets + Google Apps Script Connected
 // UPI + Card (Disabled) + COD + Service Charge
+// With Callback Support for Order Saving
 // ============================================
 
 class OnlinePaymentManager {
     constructor() {
         // UPI Details
-        this.upiId = '98979027@ybl';
+        this.upiId = '9719495844-2@ybl';
         this.payeeName = 'Quick Dukan';
         this.merchantCode = 'QKDKAN';
         
         // API URL (Google Apps Script)
-        this.API_URL = 'https://script.google.com/macros/s/AKfycbzqaZojgwSAtuvQQgG-TXES5Se5Iou7PJM11alnJgMUTpj5NySV0l3hdQyqZuhv3ZAmUA/exec';
+        this.API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
         
         // Payment Settings (Google Sheets से)
         this.paymentSettings = {
@@ -28,6 +29,17 @@ class OnlinePaymentManager {
         this.currentTotal = 0;
         this.currentUser = { phone: '', name: '' };
         this.currentLang = 'hi';
+        
+        // 🆕 CALLBACKS
+        this.callbacks = {
+            onPaymentSuccess: null,
+            onPaymentFailure: null,
+            onCODSelected: null,
+        };
+        
+        // 🆕 PAYMENT STATUS
+        this.paymentCompleted = false;
+        this.paymentMethod = '';
         
         this.init();
     }
@@ -82,9 +94,16 @@ class OnlinePaymentManager {
     }
     
     // ============================================
-    // SHOW PAYMENT POPUP
+    // ✅ SHOW PAYMENT POPUP (With Callbacks)
     // ============================================
-    async show(orderData) {
+    async show(orderData, callbacks = {}) {
+        // 🆕 Callbacks store karo
+        this.callbacks = {
+            onPaymentSuccess: callbacks.onPaymentSuccess || null,
+            onPaymentFailure: callbacks.onPaymentFailure || null,
+            onCODSelected: callbacks.onCODSelected || callbacks.onPaymentSuccess || null,
+        };
+        
         // Login check
         if (!this.isUserLoggedIn()) {
             alert('🔐 कृपया पहले Login करें!');
@@ -130,9 +149,10 @@ class OnlinePaymentManager {
                         <span class="payment-header-icon">💳</span>
                         <div>
                             <h3>${hi ? 'ऑनलाइन भुगतान' : 'Online Payment'}</h3>
-                            <p class="payment-order-id">Order: ${orderData.orderId || 'N/A'}</p>
+                            <p class="payment-order-id">${hi ? 'ऑर्डर करने के लिए पेमेंट करें' : 'Pay to place order'}</p>
                         </div>
                     </div>
+                    <button class="payment-close-btn" id="paymentCloseBtn">✕</button>
                 </div>
                 
                 <!-- Amount Section -->
@@ -215,7 +235,7 @@ class OnlinePaymentManager {
                 
                 <!-- COD -->
                 <div class="payment-cod-section">
-                    <button class="cod-btn" id="btnCOD">
+                    <button class="cod-btn" id="btnCOD" type="button">
                         <span class="cod-icon">🏍️</span>
                         <div>
                             <strong>${hi ? 'कैश ऑन डिलीवरी' : 'Cash on Delivery'}</strong>
@@ -226,8 +246,8 @@ class OnlinePaymentManager {
                 
                 <!-- Payment Done Button -->
                 <div class="payment-done-section">
-                    <button class="payment-done-btn" id="btnPaymentDone">
-                        ✅ ${hi ? 'मैंने Payment कर दिया' : 'I have made the payment'}
+                    <button class="payment-done-btn" id="btnPaymentDone" type="button">
+                        ✅ ${hi ? 'मैंने Payment कर दिया - ऑर्डर कन्फर्म करें' : 'I have paid - Confirm Order'}
                     </button>
                 </div>
             </div>
@@ -295,8 +315,26 @@ class OnlinePaymentManager {
     bindEvents(container) {
         const hi = this.currentLang === 'hi';
         const amount = this.currentTotal;
-        const note = 'Order: ' + (this.currentOrder.orderId || 'N/A') + ' - यह न बदलें! Payment verify इसी से होगा';
+        const note = 'Quick Dukan Payment - Order Amount';
         const upiUrl = this.buildUPIUrl(amount, note);
+        
+        // 🆕 Close button
+        const closeBtn = container.querySelector('#paymentCloseBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handlePaymentCancel(container);
+            });
+        }
+        
+        // Overlay click - band na ho
+        const overlay = container.querySelector('.payment-online-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                this.showToast(hi ? '⚠️ कृपया पहले पेमेंट पूरा करें' : '⚠️ Please complete payment first');
+            });
+        }
         
         // QR Click
         const qrImage = container.querySelector('#qrImage');
@@ -314,11 +352,14 @@ class OnlinePaymentManager {
         }
         
         // Copy UPI
-        container.querySelector('#btnCopyUPI').addEventListener('click', () => {
-            navigator.clipboard.writeText(this.upiId).then(() => {
-                this.showToast(hi ? '✅ UPI ID कॉपी!' : '✅ UPI ID Copied!');
+        const copyBtn = container.querySelector('#btnCopyUPI');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(this.upiId).then(() => {
+                    this.showToast(hi ? '✅ UPI ID कॉपी!' : '✅ UPI ID Copied!');
+                });
             });
-        });
+        }
         
         // UPI Apps
         container.querySelectorAll('.upi-app-btn').forEach(btn => {
@@ -328,24 +369,42 @@ class OnlinePaymentManager {
         });
         
         // Any UPI
-        container.querySelector('#btnAnyUPI').addEventListener('click', () => {
-            this.openUPIUrl(upiUrl, amount);
-        });
+        const anyUpiBtn = container.querySelector('#btnAnyUPI');
+        if (anyUpiBtn) {
+            anyUpiBtn.addEventListener('click', () => {
+                this.openUPIUrl(upiUrl, amount);
+            });
+        }
         
         // Card (Disabled)
-        container.querySelector('#btnCard').addEventListener('click', () => {
-            this.showToast(hi ? '⚠️ कार्ड सुविधा जल्द आएगी' : '⚠️ Card feature coming soon');
-        });
+        const cardBtn = container.querySelector('#btnCard');
+        if (cardBtn) {
+            cardBtn.addEventListener('click', () => {
+                this.showToast(hi ? '⚠️ कार्ड सुविधा जल्द आएगी' : '⚠️ Card feature coming soon');
+            });
+        }
         
-        // COD
-        container.querySelector('#btnCOD').addEventListener('click', () => {
-            this.handleCOD(container);
-        });
+        // ✅ COD - Direct order save karo (payment ke bina)
+        const codBtn = container.querySelector('#btnCOD');
+        if (codBtn) {
+            codBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🏍️ COD Button Clicked!');
+                this.handleCOD(container);
+            });
+        }
         
-        // Payment Done
-        container.querySelector('#btnPaymentDone').addEventListener('click', () => {
-            this.handlePaymentDone(container);
-        });
+        // ✅ Payment Done - Ab order save hoga
+        const paymentDoneBtn = container.querySelector('#btnPaymentDone');
+        if (paymentDoneBtn) {
+            paymentDoneBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('✅ Payment Done Button Clicked!');
+                this.handlePaymentDone(container);
+            });
+        }
     }
     
     // ============================================
@@ -376,7 +435,7 @@ class OnlinePaymentManager {
     // OPEN SPECIFIC UPI APP
     // ============================================
     openSpecificUPIApp(app, amount) {
-        const note = 'Order: ' + (this.currentOrder.orderId || 'N/A') + ' - यह न बदलें!';
+        const note = 'Quick Dukan Payment - Order Amount';
         const upiUrl = this.buildUPIUrl(amount, note);
         
         const apps = {
@@ -399,31 +458,111 @@ class OnlinePaymentManager {
     }
     
     // ============================================
-    // HANDLE COD
+    // ✅ HANDLE COD - Direct Order Save (No Payment)
     // ============================================
     async handleCOD(container) {
         const hi = this.currentLang === 'hi';
         
-        // Payment save करें (COD)
-        await this.savePaymentToSheet('COD', 0, this.currentAmount);
+        console.log('🏍️ COD Selected - Order save hoga without payment');
+        console.log('Callbacks:', this.callbacks);
+        console.log('onCODSelected:', this.callbacks.onCODSelected);
+        console.log('onPaymentSuccess:', this.callbacks.onPaymentSuccess);
         
-        this.showToast(hi ? '✅ COD! ₹' + this.currentAmount + ' सामान आने पर दें।' : '✅ COD! Pay ₹' + this.currentAmount + ' on delivery.');
-        
-        setTimeout(() => this.hide(container), 1500);
+        try {
+            // Payment sheet mein COD entry
+            await this.savePaymentToSheet('COD', 0, this.currentAmount);
+            
+            // ✅ Callback - Order save karo
+            if (this.callbacks.onCODSelected) {
+                console.log('✅ Calling onCODSelected callback');
+                await this.callbacks.onCODSelected({
+                    method: 'COD',
+                    amount: this.currentAmount,
+                    charge: 0,
+                    total: this.currentAmount,
+                    transactionId: 'COD-' + Date.now(),
+                    status: 'Pending',
+                });
+            } else if (this.callbacks.onPaymentSuccess) {
+                console.log('✅ Calling onPaymentSuccess callback (fallback)');
+                await this.callbacks.onPaymentSuccess({
+                    method: 'COD',
+                    amount: this.currentAmount,
+                    charge: 0,
+                    total: this.currentAmount,
+                    transactionId: 'COD-' + Date.now(),
+                    status: 'Pending',
+                });
+            } else {
+                console.log('❌ No callback found for COD!');
+            }
+            
+            this.showToast(hi ? '✅ ऑर्डर कन्फर्म! ₹' + this.currentAmount + ' सामान आने पर दें।' : '✅ Order confirmed! Pay ₹' + this.currentAmount + ' on delivery.');
+            
+            setTimeout(() => this.hide(container), 1500);
+            
+        } catch (error) {
+            console.error('❌ COD Error:', error);
+            this.showToast('⚠️ COD order failed: ' + error.message);
+        }
     }
     
     // ============================================
-    // HANDLE PAYMENT DONE (UPI)
+    // ✅ HANDLE PAYMENT DONE (UPI) - Order Save After Payment
     // ============================================
     async handlePaymentDone(container) {
         const hi = this.currentLang === 'hi';
         
-        // Payment save करें (UPI)
-        await this.savePaymentToSheet('UPI', this.currentCharge, this.currentTotal);
+        console.log('✅ Payment Done clicked - Ab order save hoga');
+        console.log('Callbacks:', this.callbacks);
         
-        this.showToast(hi ? '✅ Payment जानकारी भेज दी गई! Admin verify करेगा।' : '✅ Payment info sent! Admin will verify.');
+        try {
+            // Payment save karo
+            const paymentId = await this.savePaymentToSheet('UPI', this.currentCharge, this.currentTotal);
+            
+            // ✅ Callback - Payment success ke baad order save karo
+            if (this.callbacks.onPaymentSuccess) {
+                console.log('✅ Calling onPaymentSuccess callback');
+                await this.callbacks.onPaymentSuccess({
+                    method: 'UPI',
+                    amount: this.currentAmount,
+                    charge: this.currentCharge,
+                    total: this.currentTotal,
+                    transactionId: paymentId || 'UPI-' + Date.now(),
+                    status: 'Paid',
+                });
+            } else {
+                console.log('❌ No onPaymentSuccess callback found!');
+            }
+            
+            this.showToast(hi ? '✅ ऑर्डर कन्फर्म हो गया! Admin verify करेगा।' : '✅ Order confirmed! Admin will verify.');
+            
+            setTimeout(() => this.hide(container), 1500);
+            
+        } catch (error) {
+            console.error('❌ Payment Done Error:', error);
+            this.showToast('⚠️ Payment failed: ' + error.message);
+        }
+    }
+    
+    // ============================================
+    // ✅ HANDLE PAYMENT CANCEL
+    // ============================================
+    handlePaymentCancel(container) {
+        const hi = this.currentLang === 'hi';
         
-        setTimeout(() => this.hide(container), 1500);
+        console.log('❌ Payment cancelled by user');
+        
+        if (this.callbacks.onPaymentFailure) {
+            this.callbacks.onPaymentFailure({
+                message: 'Payment cancelled',
+                method: this.currentOrder?.paymentMethod || 'UPI',
+            });
+        }
+        
+        this.showToast(hi ? '❌ पेमेंट कैंसिल - ऑर्डर नहीं हुआ' : '❌ Payment cancelled - Order not placed');
+        
+        this.hide(container);
     }
     
     // ============================================
