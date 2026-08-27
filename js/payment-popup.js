@@ -6,7 +6,7 @@
 class PaymentPopupManager {
     constructor() {
         this.currentLang = 'hi';
-        this.upiId = '98979027@ybl';
+        this.upiId = '9719495844-2@ybl';
         this.payeeName = 'Quick Dukan';
         this.merchantCode = 'QKDKAN';
         
