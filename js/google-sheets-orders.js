@@ -4,7 +4,7 @@
 
 class GoogleSheetsOrders {
   constructor() {
-    this.API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
+    this.API_URL = 'https://script.google.com/macros/s/AKfycbxuqhAw1n8h2d434kxB7sUfMeuzCZLArJz_KPN1q2LvOOBaguPRdcgi7WnssWBvFvCc/exec';
     this.isEnabled = true;
     this.orderCheckInterval = null;
     console.log('📊 Google Sheets Real-time System Ready');
