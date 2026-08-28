@@ -4,7 +4,7 @@
 // Bike Animation + Payment Status + Rating + Share
 // ============================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxuqhAw1n8h2d434kxB7sUfMeuzCZLArJz_KPN1q2LvOOBaguPRdcgi7WnssWBvFvCc/exec';
 
 // Shop Location
 const SHOP_LOCATION = { lat: 27.6667496, lng: 77.7124673, name: 'Quick Dukan' };
