@@ -225,7 +225,7 @@ function createOrderCard(order) {
     const userLng = order[11] || '';
     const status = order[13] || 'Pending';
     const orderDate = order[14] || '';
-    const rating = order[17] || '';
+    const rating = order[18] || '';
     
     // 🆕 Payment Info
     const paymentInfo = getPaymentInfo(orderId);
