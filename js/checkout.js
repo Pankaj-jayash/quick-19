@@ -440,7 +440,7 @@ class CheckoutManager {
         if (!this.currentOrderId) return;
 
         try {
-            const API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
+            const API_URL = 'https://script.google.com/macros/s/AKfycbxuqhAw1n8h2d434kxB7sUfMeuzCZLArJz_KPN1q2LvOOBaguPRdcgi7WnssWBvFvCc/exec';
             const response = await fetch(`${API_URL}?action=getOrderStatus&orderId=${this.currentOrderId}`);
             const data = await response.json();
 
@@ -741,7 +741,7 @@ class CheckoutManager {
                 this.showToast(this.getMsg('paymentMethod', 'required'));
                 return;
             }
-            
+
             const userPhone = localStorage.getItem('userPhone');
             if (!userPhone) {
                 this.showToast(this.getMsg('toast', 'loginRequired'));
@@ -754,7 +754,7 @@ class CheckoutManager {
 
         // USER BLOCK CHECK
         try {
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
+            const apiUrl = 'https://script.google.com/macros/s/AKfycbxuqhAw1n8h2d434kxB7sUfMeuzCZLArJz_KPN1q2LvOOBaguPRdcgi7WnssWBvFvCc/exec';
             const blockResponse = await fetch(`${apiUrl}?action=checkUserBlockedForOrder&phone=${phone}`);
             const blockData = await blockResponse.json();
 
@@ -848,12 +848,12 @@ class CheckoutManager {
     // ============================================
     async submitDirectOrder(orderData) {
         console.log('📦 Direct Order Flow Started - Payment Pehle');
-        
+
         // ✅ UPI Payment - Pehle Payment Popup
         if (this.selectedPaymentMethod === 'UPI') {
             if (window.onlinePaymentManager) {
                 console.log('💳 Opening Payment Popup...');
-                
+
                 window.onlinePaymentManager.show(orderData, {
                     onPaymentSuccess: async (paymentData) => {
                         console.log('✅ Payment successful, ab order save hoga:', paymentData);
@@ -898,13 +898,13 @@ class CheckoutManager {
     async saveDirectOrderToSheets(orderData, paymentData) {
         console.log('📦 Saving order to Google Sheets...');
         console.log('Payment Data:', paymentData);
-        
+
         try {
             // Order items format karo
             const itemsText = this.formatItemsForSheet(orderData.items);
-            
-            const API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
-            
+
+            const API_URL = 'https://script.google.com/macros/s/AKfycbxuqhAw1n8h2d434kxB7sUfMeuzCZLArJz_KPN1q2LvOOBaguPRdcgi7WnssWBvFvCc/exec';
+
             // Order data prepare karo
             const orderParams = new URLSearchParams({
                 customerName: orderData.customer.name,
@@ -924,9 +924,9 @@ class CheckoutManager {
                 paymentStatus: paymentData.status || 'Pending',
                 paymentId: paymentData.transactionId || '',
             });
-            
+
             console.log('📤 Sending order to Google Sheets...');
-            
+
             const response = await fetch(`${API_URL}?action=saveOrder`, {
                 method: 'POST',
                 headers: {
@@ -934,46 +934,46 @@ class CheckoutManager {
                 },
                 body: orderParams.toString(),
             });
-            
+
             const result = await response.json();
-            
+
             console.log('📥 Response:', result);
-            
+
             if (result.success && result.orderId) {
                 console.log('✅ Order saved successfully! Order ID:', result.orderId);
-                
+
                 orderData.orderId = result.orderId;
-                
+
                 // ✅ Payment record bhi save karo (agar UPI hai)
                 if (paymentData.method === 'UPI') {
                     await this.savePaymentRecord(result.orderId, orderData, paymentData);
                 }
-                
+
                 // Order history save karo
                 this.saveToOrderHistory(orderData);
-                
+
                 // Confetti
                 this.triggerConfetti();
-                
+
                 // Success toast
                 this.showToast(this.getMsg('toast', 'orderSentDirect'));
-                
+
                 // Order tracking shuru karo
                 if (window.orderStatusPopup) {
                     window.orderStatusPopup.startTracking(result.orderId);
                 } else {
                     this.startOrderTracking(result.orderId);
                 }
-                
+
                 // Checkout close karo
                 this.finalizeOrder('direct');
-                
+
             } else {
                 console.log('⚠️ Order save failed:', result.message);
                 this.setButtonState('ready');
                 this.showToast(this.getMsg('toast', 'orderFailed'));
             }
-            
+
         } catch (error) {
             console.error('❌ Google Sheets Error:', error);
             this.setButtonState('ready');
@@ -987,9 +987,9 @@ class CheckoutManager {
     async savePaymentRecord(orderId, orderData, paymentData) {
         try {
             const API_URL = 'https://script.google.com/macros/s/AKfycbwUaX6PZW3xpKwilMVEr_oXjFXKTMsz3qfUwVy8icPjQjY5i7e6hLTWHz4-0kwhZBM1aw/exec';
-            
+
             const itemsText = this.formatItemsForSheet(orderData.items);
-            
+
             const paymentParams = new URLSearchParams({
                 orderId: orderId,
                 phone: orderData.customer.phone.replace(/\D/g, ''),
@@ -1000,7 +1000,7 @@ class CheckoutManager {
                 totalAmount: paymentData.total || paymentData.amount,
                 method: paymentData.method,
             });
-            
+
             const response = await fetch(`${API_URL}?action=savePayment`, {
                 method: 'POST',
                 headers: {
@@ -1008,10 +1008,10 @@ class CheckoutManager {
                 },
                 body: paymentParams.toString(),
             });
-            
+
             const result = await response.json();
             console.log('💳 Payment record saved:', result);
-            
+
         } catch (error) {
             console.log('⚠️ Payment record save error:', error);
         }
@@ -1022,7 +1022,7 @@ class CheckoutManager {
     // ============================================
     formatItemsForSheet(items) {
         if (!items || items.length === 0) return '';
-        
+
         return items.map(item => {
             const name = typeof item.name === 'object' 
                 ? (item.name.hi || item.name.en || '') 
