@@ -145,9 +145,6 @@
             .login-iframe { height: 85vh; }
         }
     </style>
-
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
 </head>
 <body>
     
@@ -613,200 +610,164 @@
         </div>
     </div>
     
-    <!-- ============================================ -->
-    <!-- CHECKOUT MODAL (FINAL - Live GPS + Multilingual) -->
-    <!-- ============================================ -->
-    <div id="checkoutModal" class="checkout-modal hidden" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
-        <div class="checkout-overlay"></div>
-        <div class="checkout-content">
-            
-            <!-- Header -->
-            <div class="checkout-header">
-                <div class="checkout-header-left">
-                    <span class="checkout-header-icon" aria-hidden="true">📦</span>
-                    <div class="checkout-header-text">
-                        <h2 id="checkoutTitle">ऑर्डर कन्फर्म करें</h2>
-                        <p class="checkout-subtitle">डिलीवरी जानकारी भरें</p>
-                    </div>
-                </div>
-                <button id="closeCheckout" class="close-btn" aria-label="बंद करें">
-                    <span aria-hidden="true">✕</span>
-                </button>
-            </div>
-            
-            <!-- Cart Total -->
-            <div class="checkout-cart-total">
-                <span class="total-items">📋 <span id="checkoutItemCount">0 आइटम</span></span>
-                <span class="total-price" id="checkoutTotal">₹0</span>
-            </div>
-            
-            <!-- Form -->
-            <div class="checkout-form">
-                
-                <!-- Name -->
-                <div class="form-group">
-                    <input type="text" id="customerName" class="form-input" 
-                           placeholder="👤  पूरा नाम लिखें..." autocomplete="name" required>
-                </div>
-                
-                <!-- Phone -->
-                <div class="form-group">
-                    <div class="phone-input-group">
-                        <span class="phone-prefix">+91</span>
-                        <input type="tel" id="customerPhone" class="phone-input" 
-                               placeholder="📱  मोबाइल नंबर" maxlength="10" autocomplete="tel"
-                               inputmode="numeric" pattern="[0-9]{10}" required>
-                    </div>
-                </div>
-                
-                <!-- Location Status Indicator -->
-                <div class="location-status">
-                    <span id="locationIndicator" class="location-indicator searching">
-                        <span class="location-dot searching"></span> ⏳ लोकेशन ले रहे हैं...
-                    </span>
-                </div>
-                
-                <!-- Village/City -->
-                <div class="form-group">
-                    <input type="text" id="villageCity" class="form-input" 
-                           placeholder="🏘️  गाँव या शहर" required>
-                </div>
-                
-                <!-- Nearby Place -->
-                <div class="form-group">
-                    <input type="text" id="landmark" class="form-input" 
-                           placeholder="🏠  आस-पास की जगह (वैकल्पिक)">
-                </div>
-                
-                <!-- Pincode (Optional) -->
-                <div class="form-group">
-                    <input type="text" id="pincode" class="form-input" 
-                           placeholder="📮  पिन कोड (वैकल्पिक)" maxlength="6" inputmode="numeric" pattern="[0-9]{6}">
-                </div>
-                
-                <!-- Delivery Time -->
-                <div class="delivery-time-section">
-                    <div class="delivery-time-label">
-                        <span>⏱️</span>
-                        <span>डिलीवरी समय</span>
-                    </div>
-                    <div class="delivery-time-options">
-                        <label class="time-radio-label selected" for="timeNow">
-                            <input type="radio" id="timeNow" name="deliveryTime" value="अभी" checked>
-                            <span>अभी (30-45 मिनट)</span>
-                        </label>
-                        <label class="time-radio-label" for="timeEve1">
-                            <input type="radio" id="timeEve1" name="deliveryTime" value="शाम 5-7 बजे">
-                            <span>शाम 5-7 बजे</span>
-                        </label>
-                        <label class="time-radio-label" for="timeEve2">
-                            <input type="radio" id="timeEve2" name="deliveryTime" value="शाम 7-9 बजे">
-                            <span>शाम 7-9 बजे</span>
-                        </label>
-                        <input type="text" id="manualTime" class="time-manual-input" 
-                               placeholder="अपना समय...">
-                    </div>
-                </div>
-            
-
+   <!-- ============================================ -->
+<!-- CHECKOUT MODAL (FINAL - Compact Toggle) -->
 <!-- ============================================ -->
-<!-- 🆕 ORDER METHOD SELECTION - WhatsApp vs Direct -->
-<!-- ============================================ -->
-<div class="order-method-section">
-    <div class="order-method-label">
-        <span class="method-icon">📋</span>
-        <span data-lang-key="orderMethod">ऑर्डर कैसे करें?</span>
-    </div>
-    
-    
-    <div class="order-method-buttons">
-        <!-- WhatsApp Order Button -->
-        <button 
-            type="button" 
-            class="order-method-btn whatsapp-method selected" 
-            id="whatsappMethodBtn"
-            data-method="whatsapp"
-            aria-label="WhatsApp पर ऑर्डर करें"
-        >
-            <span class="method-check">✓</span>
-            <span class="method-btn-icon">💬</span>
-            <span class="method-btn-text">WhatsApp Order</span>
-            <span class="method-btn-subtext">पुराना तरीका</span>
-        </button>
+<div id="checkoutModal" class="checkout-modal hidden" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="checkout-overlay"></div>
+    <div class="checkout-content">
         
-        <!-- Direct Order Button -->
-        <button 
-            type="button" 
-            class="order-method-btn direct-method" 
-            id="directMethodBtn"
-            data-method="direct"
-            aria-label="सीधे ऐप पर ऑर्डर करें"
-        >
-            <span class="method-check">✓</span>
-            <span class="method-btn-icon">🛒</span>
-            <span class="method-btn-text">Direct Order</span>
-            <span class="method-btn-subtext">ऐप पर ही</span>
-        </button>
-    </div>
-</div>
-<!-- Payment Method Section -->
-<div id="paymentMethodSection" class="payment-method-section hidden">
-    <div class="payment-method-title">💳 Payment Method चुनें</div>
-    <div class="payment-method-buttons">
-        <!-- UPI -->
-        <button class="payment-method-btn" data-payment="UPI">
-            <span class="pm-icon">💳</span>
-            <span class="pm-text">UPI (Recommended)</span>
-            <span class="pm-check">✓</span>
-        </button>
-        
-        <!-- Card (Disabled) -->
-        <button class="payment-method-btn" data-payment="Card">
-            <span class="pm-icon">💳</span>
-            <span class="pm-text">Card</span>
-            <span class="pm-coming-soon">जल्द आएगा</span>
-            <span class="pm-check">✓</span>
-        </button>
-        
-        <!-- COD -->
-        <button class="payment-method-btn" data-payment="COD">
-            <span class="pm-icon">🏍️</span>
-            <span class="pm-text">Cash on Delivery</span>
-            <span class="pm-check">✓</span>
-        </button>
-    </div>
-</div>
-                
-                <!-- Save Info -->
-                <div class="form-group save-info-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="saveInfo" checked>
-                        <span class="checkmark"></span>
-                        <span>जानकारी सेव करें</span>
-                    </label>
+        <!-- Header -->
+        <div class="checkout-header">
+            <div class="checkout-header-left">
+                <span class="checkout-header-icon" aria-hidden="true">📦</span>
+                <div class="checkout-header-text">
+                    <h2 id="checkoutTitle">ऑर्डर कन्फर्म करें</h2>
+                    <p class="checkout-subtitle">डिलीवरी जानकारी भरें</p>
                 </div>
-                
-                <!-- Hidden Location Fields -->
-                <input type="hidden" id="latitude">
-                <input type="hidden" id="longitude">
-                <input type="hidden" id="locationUrl">
-                
             </div>
-            
-            <!-- Footer -->
-            <div class="checkout-footer">
-                <button id="confirmOrderBtn" class="confirm-order-btn state-waiting">
-                    <span class="btn-spinner"></span>
-                    <span class="whatsapp-icon" style="display:none;">💬</span>
-                    <span>⏳ लोकेशन का इंतज़ार...</span>
-                </button>
-            </div>
-            
-            <!-- Confetti Container -->
-            <div id="checkoutConfetti" class="checkout-confetti-container"></div>
+            <button id="closeCheckout" class="close-btn" aria-label="बंद करें">
+                <span aria-hidden="true">✕</span>
+            </button>
         </div>
+        
+        <!-- Cart Total -->
+        <div class="checkout-cart-total">
+            <span class="total-items">📋 <span id="checkoutItemCount">0 आइटम</span></span>
+            <span class="total-price" id="checkoutTotal">₹0</span>
+        </div>
+        
+        <!-- 🆕 COMPACT ORDER METHOD TOGGLE - TOP PE -->
+        <div class="order-method-section-top">
+            <div class="order-method-buttons-top">
+                <!-- Sliding Indicator -->
+                <div class="method-slider" id="methodSlider"></div>
+                
+               <!-- WhatsApp Button - selected CLASS HATAO -->
+<button 
+    type="button" 
+    class="order-method-btn-top whatsapp-method" 
+    id="whatsappMethodBtn"
+    data-method="whatsapp"
+    aria-label="WhatsApp पर ऑर्डर करें"
+>
+    <span class="method-btn-icon">💬</span>
+    <span class="method-btn-text">WhatsApp</span>
+    <span class="method-check">✓</span>
+</button>
+
+<!-- Direct Button - selected CLASS LAGAO -->
+<button 
+    type="button" 
+    class="order-method-btn-top direct-method selected" 
+    id="directMethodBtn"
+    data-method="direct"
+    aria-label="सीधे ऐप पर ऑर्डर करें"
+>
+    <span class="method-btn-icon">🛒</span>
+    <span class="method-btn-text">Direct</span>
+    <span class="method-check">✓</span>
+</button>
+            </div>
+        </div>
+        
+        <!-- Form -->
+        <div class="checkout-form">
+            
+            <!-- Name -->
+            <div class="form-group">
+                <input type="text" id="customerName" class="form-input" 
+                       placeholder="👤  पूरा नाम लिखें..." autocomplete="name" required>
+            </div>
+            
+            <!-- Phone -->
+            <div class="form-group">
+                <div class="phone-input-group">
+                    <span class="phone-prefix">+91</span>
+                    <input type="tel" id="customerPhone" class="phone-input" 
+                           placeholder="📱  मोबाइल नंबर" maxlength="10" autocomplete="tel"
+                           inputmode="numeric" pattern="[0-9]{10}" required>
+                </div>
+            </div>
+            
+            <!-- Location Status Indicator -->
+            <div class="location-status">
+                <span id="locationIndicator" class="location-indicator searching">
+                    <span class="location-dot searching"></span> ⏳ लोकेशन ले रहे हैं...
+                </span>
+            </div>
+            
+            <!-- Village/City -->
+            <div class="form-group">
+                <input type="text" id="villageCity" class="form-input" 
+                       placeholder="🏘️  गाँव या शहर" required>
+            </div>
+            
+            <!-- Nearby Place -->
+            <div class="form-group">
+                <input type="text" id="landmark" class="form-input" 
+                       placeholder="🏠  आस-पास की जगह (वैकल्पिक)">
+            </div>
+            
+            <!-- Pincode (Optional) -->
+            <div class="form-group">
+                <input type="text" id="pincode" class="form-input" 
+                       placeholder="📮  पिन कोड (वैकल्पिक)" maxlength="6" inputmode="numeric" pattern="[0-9]{6}">
+            </div>
+            
+            <!-- Delivery Time -->
+            <div class="delivery-time-section">
+                <div class="delivery-time-label">
+                    <span>⏱️</span>
+                    <span>डिलीवरी समय</span>
+                </div>
+                <div class="delivery-time-options">
+                    <label class="time-radio-label selected" for="timeNow">
+                        <input type="radio" id="timeNow" name="deliveryTime" value="अभी" checked>
+                        <span>अभी (30-45 मिनट)</span>
+                    </label>
+                    <label class="time-radio-label" for="timeEve1">
+                        <input type="radio" id="timeEve1" name="deliveryTime" value="शाम 5-7 बजे">
+                        <span>शाम 5-7 बजे</span>
+                    </label>
+                    <label class="time-radio-label" for="timeEve2">
+                        <input type="radio" id="timeEve2" name="deliveryTime" value="शाम 7-9 बजे">
+                        <span>शाम 7-9 बजे</span>
+                    </label>
+                    <input type="text" id="manualTime" class="time-manual-input" 
+                           placeholder="अपना समय...">
+                </div>
+            </div>
+            
+            <!-- Save Info -->
+            <div class="form-group save-info-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="saveInfo" checked>
+                    <span class="checkmark"></span>
+                    <span>जानकारी सेव करें</span>
+                </label>
+            </div>
+            
+            <!-- Hidden Location Fields -->
+            <input type="hidden" id="latitude">
+            <input type="hidden" id="longitude">
+            <input type="hidden" id="locationUrl">
+            
+        </div>
+        
+        <!-- Footer -->
+        <div class="checkout-footer">
+            <button id="confirmOrderBtn" class="confirm-order-btn state-waiting">
+                <span class="btn-spinner"></span>
+                <span class="whatsapp-icon" style="display:none;">💬</span>
+                <span>⏳ लोकेशन का इंतज़ार...</span>
+            </button>
+        </div>
+        
+        <!-- Confetti Container -->
+        <div id="checkoutConfetti" class="checkout-confetti-container"></div>
     </div>
-    
+</div>
     <!-- ============================================ -->
     <!-- LOGIN IFRAME MODAL -->
     <!-- ============================================ -->
