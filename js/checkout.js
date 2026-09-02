@@ -1,8 +1,7 @@
 // ============================================
 // CHECKOUT.JS - Premium Checkout Logic (Final)
 // Quick Dukan - Compact Toggle | Multilingual
-// Payment Section Removed from Checkout
-// Payment Popup Opens After Direct Order
+// Popups Fixed: Success + Order Status Turant Show
 // ============================================
 
 class CheckoutManager {
@@ -29,10 +28,10 @@ class CheckoutManager {
         this.deliveryTimeRadios = document.querySelectorAll('input[name="deliveryTime"]');
         this.manualTimeInput = document.getElementById('manualTime');
 
-        // 🆕 ORDER METHOD BUTTONS (Compact TOP Toggle)
+        // ORDER METHOD BUTTONS (Compact TOP Toggle)
         this.whatsappMethodBtn = document.getElementById('whatsappMethodBtn');
         this.directMethodBtn = document.getElementById('directMethodBtn');
-        this.selectedOrderMethod = 'direct'; // ✅ DEFAULT: WhatsApp
+        this.selectedOrderMethod = 'direct';
 
         // Confetti
         this.confettiContainer = document.getElementById('checkoutConfetti');
@@ -45,12 +44,12 @@ class CheckoutManager {
         this.storageKey = 'quick-dukan-user-info';
         this.isSubmitting = false;
 
-        // 🆕 ORDER TRACKING
+        // ORDER TRACKING
         this.currentOrderId = null;
         this.orderTrackingInterval = null;
         this.orderStatusPopup = null;
 
-        // 🔥 LOCATION MANAGER
+        // LOCATION MANAGER
         this.location = null;
 
         if (!this.checkoutModal) return;
@@ -237,7 +236,7 @@ class CheckoutManager {
     }
 
     // ============================================
-    // 🆕 SELECT ORDER METHOD (Compact Toggle - No Payment Section)
+    // SELECT ORDER METHOD
     // ============================================
     selectOrderMethod(method) {
         this.selectedOrderMethod = method;
@@ -261,7 +260,7 @@ class CheckoutManager {
     }
 
     // ============================================
-    // 🆕 UPDATE CONFIRM BUTTON TEXT
+    // UPDATE CONFIRM BUTTON TEXT
     // ============================================
     updateConfirmButtonText() {
         if (!this.confirmOrderBtn) return;
@@ -435,7 +434,6 @@ class CheckoutManager {
         this.fillSavedData();
         this.resetTimeSelection();
 
-        // ✅ Default WhatsApp select
         this.selectOrderMethod('direct');
 
         this.checkoutModal.classList.remove('hidden');
@@ -459,7 +457,9 @@ class CheckoutManager {
             this.location.stop();
         }
 
-        this.stopOrderTracking();
+        // ⚠️ FIX: Tracking continue rahe - stop MAT karo
+        // this.stopOrderTracking(); // ❌ REMOVED
+
         this.clearForm();
 
         this.checkoutModal.classList.add('hidden');
@@ -480,7 +480,6 @@ class CheckoutManager {
             el.classList.remove('error', 'valid');
         });
 
-        // ✅ Default WhatsApp select
         this.selectOrderMethod('direct');
     }
 
@@ -631,7 +630,7 @@ class CheckoutManager {
         } else {
             this.customerPhone.classList.remove('valid');
             this.customerPhone.classList.add('error');
-            
+
             this.customerPhone.style.animation = 'none';
             this.customerPhone.offsetHeight;
             this.customerPhone.style.animation = 'shake 0.3s ease';
@@ -639,7 +638,7 @@ class CheckoutManager {
     }
 
     // ============================================
-    // 🔥 SUBMIT ORDER
+    // SUBMIT ORDER
     // ============================================
     async submitOrder() {
         if (this.isSubmitting) {
@@ -652,7 +651,6 @@ class CheckoutManager {
         const phone = this.customerPhone?.value?.replace(/\D/g, '');
         const villageCity = this.villageCity?.value?.trim();
 
-        // Validate Name
         if (!name || name.length < 2) {
             this.showToast(this.getMsg('toast', 'nameRequired'));
             this.customerName?.classList.add('error');
@@ -662,7 +660,6 @@ class CheckoutManager {
         }
         this.customerName?.classList.remove('error');
 
-        // Validate Phone
         if (!phone || phone.length !== 10 || !/^[6-9]/.test(phone)) {
             this.showToast(this.getMsg('toast', 'phoneRequired'));
             this.customerPhone?.classList.add('error');
@@ -672,7 +669,6 @@ class CheckoutManager {
         }
         this.customerPhone?.classList.remove('error');
 
-        // Validate Village/City
         if (!villageCity || villageCity.length < 2) {
             this.showToast(this.getMsg('toast', 'cityRequired'));
             this.villageCity?.classList.add('error');
@@ -689,7 +685,7 @@ class CheckoutManager {
             const blockData = await blockResponse.json();
 
             if (blockData.success && blockData.blocked) {
-                alert('🚫 आपको admin ने block कर दिया है। आप order नहीं कर सकते।\n\nकारण: ' + (blockData.reason || 'नहीं बताया गया'));
+                alert('🚫 आपको admin ने block कर दिया है।');
                 this.close();
                 this.isSubmitting = false;
                 return;
@@ -709,20 +705,13 @@ class CheckoutManager {
             const locationUrl = document.getElementById('locationUrl')?.value;
 
             if (lat && lng && parseFloat(lat) !== 0 && parseFloat(lng) !== 0) {
-                locationData = {
-                    lat: lat,
-                    lng: lng,
-                    url: locationUrl || `https://maps.google.com/?q=${lat},${lng}`
-                };
+                locationData = { lat, lng, url: locationUrl || `https://maps.google.com/?q=${lat},${lng}` };
             }
         }
 
-        if (!locationData.lat || !locationData.lng || 
-            parseFloat(locationData.lat) === 0 || parseFloat(locationData.lng) === 0) {
+        if (!locationData.lat || !locationData.lng) {
             this.showToast(this.getMsg('toast', 'gpsRequired'));
-            if (this.location) {
-                this.location.showPopup();
-            }
+            if (this.location) this.location.showPopup();
             this.isSubmitting = false;
             return;
         }
@@ -734,12 +723,12 @@ class CheckoutManager {
 
         const orderData = {
             customer: {
-                name: name,
+                name,
                 phone: '+91 ' + phone,
-                villageCity: villageCity,
+                villageCity,
                 landmark: this.landmark?.value?.trim() || '',
                 pincode: this.pincode?.value?.trim() || '',
-                deliveryTime: deliveryTime,
+                deliveryTime,
             },
             items: this.cartItems,
             totals: {
@@ -752,20 +741,17 @@ class CheckoutManager {
 
         console.log('📦 Final Order Data:', JSON.stringify(orderData, null, 2));
 
-        // ✅ WhatsApp ya Direct order
         if (this.selectedOrderMethod === 'whatsapp') {
             this.submitWhatsAppOrder(orderData);
         } else {
             this.submitDirectOrder(orderData);
         }
 
-        setTimeout(() => {
-            this.isSubmitting = false;
-        }, 2000);
+        setTimeout(() => { this.isSubmitting = false; }, 2000);
     }
 
     // ============================================
-    // ✅ SUBMIT WHATSAPP ORDER
+    // ✅ SUBMIT WHATSAPP ORDER - Success Popup Turant
     // ============================================
     submitWhatsAppOrder(orderData) {
         if (window.whatsappManager?.sendOrder) {
@@ -776,53 +762,48 @@ class CheckoutManager {
 
         this.saveToOrderHistory(orderData);
         this.triggerConfetti();
+        
+        // ✅ FIX: Success popup TURANT show (6 sec delay removed)
         this.showSuccessPopup(orderData);
+        
         this.finalizeOrder('whatsapp');
     }
 
     // ============================================
-    // ✅ SUBMIT DIRECT ORDER - Payment Popup Opens
+    // ✅ SUBMIT DIRECT ORDER
     // ============================================
     async submitDirectOrder(orderData) {
         console.log('📦 Direct Order - Payment Popup khulega');
 
-        // Login check
         const userPhone = localStorage.getItem('userPhone');
         if (!userPhone) {
             this.showToast(this.getMsg('toast', 'loginRequired'));
-            if (typeof openLoginPopup === 'function') {
-                openLoginPopup();
-            }
+            if (typeof openLoginPopup === 'function') openLoginPopup();
             this.setButtonState('ready');
             return;
         }
 
-        // Payment popup open karo
         if (window.onlinePaymentManager) {
             window.onlinePaymentManager.show(orderData, {
                 onPaymentSuccess: async (paymentData) => {
-                    console.log('✅ Payment successful:', paymentData);
                     await this.saveDirectOrderToSheets(orderData, paymentData);
                 },
                 onPaymentFailure: (error) => {
-                    console.log('❌ Payment failed:', error);
                     this.setButtonState('ready');
                     this.showToast(this.getMsg('toast', 'paymentFailed'));
                 },
                 onCODSelected: async (paymentData) => {
-                    console.log('🏍️ COD selected');
                     await this.saveDirectOrderToSheets(orderData, paymentData);
                 }
             });
         } else {
-            console.log('⚠️ Payment Manager not loaded');
             this.setButtonState('ready');
             this.showToast('⚠️ Payment system not available');
         }
     }
 
     // ============================================
-    // ✅ SAVE ORDER TO GOOGLE SHEETS
+    // ✅ SAVE ORDER - Pending Status Turant Show
     // ============================================
     async saveDirectOrderToSheets(orderData, paymentData) {
         console.log('📦 Saving order to Google Sheets...');
@@ -852,9 +833,7 @@ class CheckoutManager {
 
             const response = await fetch(`${API_URL}?action=saveOrder`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: orderParams.toString(),
             });
 
@@ -871,7 +850,14 @@ class CheckoutManager {
                 this.saveToOrderHistory(orderData);
                 this.triggerConfetti();
                 this.showToast(this.getMsg('toast', 'orderSentDirect'));
+
+                // ✅ FIX: Pending status TURANT show karo
+                this.showOrderStatusPopup('Pending');
+
+                // ✅ FIX: Tracking start (close ke baad bhi chale)
                 this.startOrderTracking(result.orderId);
+
+                // ✅ FIX: Checkout close
                 this.finalizeOrder('direct');
             } else {
                 this.setButtonState('ready');
@@ -905,9 +891,7 @@ class CheckoutManager {
 
             await fetch(`${API_URL}?action=savePayment`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: paymentParams.toString(),
             });
         } catch (error) {
@@ -916,18 +900,13 @@ class CheckoutManager {
     }
 
     // ============================================
-    // ✅ FORMAT ITEMS FOR SHEET
+    // FORMAT ITEMS FOR SHEET
     // ============================================
     formatItemsForSheet(items) {
         if (!items || items.length === 0) return '';
-
         return items.map(item => {
-            const name = typeof item.name === 'object' 
-                ? (item.name.hi || item.name.en || '') 
-                : (item.name || '');
-            const unit = typeof item.unit === 'object' 
-                ? (item.unit.hi || item.unit.en || '') 
-                : (item.unit || '');
+            const name = typeof item.name === 'object' ? (item.name.hi || item.name.en || '') : (item.name || '');
+            const unit = typeof item.unit === 'object' ? (item.unit.hi || item.unit.en || '') : (item.unit || '');
             const qty = item.quantity || 1;
             const price = item.price || 0;
             return `${name} (${unit}) ×${qty} = ₹${price * qty}`;
@@ -959,18 +938,25 @@ class CheckoutManager {
         }
     }
 
+    // ============================================
+    // ✅ SUCCESS POPUP - TURANT (No Delay)
+    // ============================================
     showSuccessPopup(orderData) {
-        setTimeout(() => {
-            if (window.orderPopupManager) {
-                window.orderPopupManager.showSuccessPopup({
-                    itemCount: this.cartItemCount,
-                    total: this.cartTotal,
-                    deliveryTime: orderData.customer.deliveryTime,
-                });
-            }
-        }, 6000);
-    }
+    // ✅ 6 SECOND DELAY ke saath show karo
+    setTimeout(() => {
+        if (window.orderPopupManager) {
+            window.orderPopupManager.showSuccessPopup({
+                itemCount: this.cartItemCount,
+                total: this.cartTotal,
+                deliveryTime: orderData.customer.deliveryTime,
+            });
+        }
+    }, 6000);
+}
 
+    // ============================================
+    // FINALIZE ORDER
+    // ============================================
     finalizeOrder(method) {
         setTimeout(() => {
             this.close();
@@ -995,27 +981,20 @@ class CheckoutManager {
     getSelectedDeliveryTime() {
         const checkedRadio = document.querySelector('input[name="deliveryTime"]:checked');
         if (checkedRadio) return checkedRadio.value;
-
         const manualTime = this.manualTimeInput?.value?.trim();
         if (manualTime) return manualTime;
-
         return this.currentLang === 'hi' ? 'अभी' : 'Now';
     }
 
     sendDirectWhatsApp(orderData) {
         const isHindi = this.currentLang === 'hi';
-
         let message = isHindi
             ? '🛒 *Quick Dukan - नया ऑर्डर*\n\n━━━━━━━━━━━━━━━━\n\n'
             : '🛒 *Quick Dukan - New Order*\n\n━━━━━━━━━━━━━━━━\n\n';
 
         orderData.items.forEach((item, index) => {
-            const name = typeof item.name === 'object' 
-                ? (item.name[this.currentLang] || item.name.hi || item.name.en) 
-                : item.name;
-            const unit = typeof item.unit === 'object' 
-                ? (item.unit[this.currentLang] || item.unit.hi || item.unit.en) 
-                : (item.unit || '');
+            const name = typeof item.name === 'object' ? (item.name[this.currentLang] || item.name.hi || item.name.en) : item.name;
+            const unit = typeof item.unit === 'object' ? (item.unit[this.currentLang] || item.unit.hi || item.unit.en) : (item.unit || '');
             message += `${index + 1}. *${name}*\n   ${unit} × ${item.quantity || 1} = ₹${(item.price || 0) * (item.quantity || 1)}\n`;
         });
 
@@ -1025,19 +1004,13 @@ class CheckoutManager {
             : `📦 Total: ${orderData.totals.itemCount} items | 💰 Total: ₹${orderData.totals.total}\n\n`;
 
         message += isHindi ? '👤 *ग्राहक जानकारी:*\n' : '👤 *Customer Info:*\n';
-        message += `${orderData.customer.name}\n`;
-        message += `${orderData.customer.phone}\n`;
-        message += `${orderData.customer.villageCity}`;
+        message += `${orderData.customer.name}\n${orderData.customer.phone}\n${orderData.customer.villageCity}`;
         if (orderData.customer.landmark) message += `, ${orderData.customer.landmark}`;
         message += '\n';
         if (orderData.customer.deliveryTime) {
-            message += isHindi 
-                ? `⏱️ डिलीवरी: ${orderData.customer.deliveryTime}\n` 
-                : `⏱️ Delivery: ${orderData.customer.deliveryTime}\n`;
+            message += isHindi ? `⏱️ डिलीवरी: ${orderData.customer.deliveryTime}\n` : `⏱️ Delivery: ${orderData.customer.deliveryTime}\n`;
         }
-        if (orderData.location.url) {
-            message += `\n📍 ${orderData.location.url}\n`;
-        }
+        if (orderData.location.url) message += `\n📍 ${orderData.location.url}\n`;
         message += isHindi ? '\n🙏 कृपया ऑर्डर कन्फर्म करें।' : '\n🙏 Please confirm the order.';
 
         const whatsappNumber = window.CONFIG?.whatsappNumber || '919719312956';
@@ -1046,7 +1019,6 @@ class CheckoutManager {
 
     saveUserInfo() {
         if (!this.saveInfo?.checked) return;
-
         const data = {
             name: this.customerName?.value || '',
             phone: this.customerPhone?.value || '',
@@ -1054,7 +1026,6 @@ class CheckoutManager {
             landmark: this.landmark?.value || '',
             pincode: this.pincode?.value || '',
         };
-
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(data));
         } catch (e) {}
@@ -1064,9 +1035,7 @@ class CheckoutManager {
         try {
             const saved = localStorage.getItem(this.storageKey);
             if (!saved) return;
-
             const data = JSON.parse(saved);
-
             if (this.customerName && data.name) this.customerName.value = data.name;
             if (this.customerPhone && data.phone) {
                 this.customerPhone.value = data.phone;
@@ -1080,11 +1049,8 @@ class CheckoutManager {
 
     triggerConfetti() {
         if (!this.confettiContainer) return;
-
         this.confettiContainer.innerHTML = '';
-
         const colors = ['#FF9933', '#138808', '#FFD700', '#FF4444', '#25D366', '#FF6D00'];
-
         for (let i = 0; i < 40; i++) {
             const piece = document.createElement('div');
             piece.className = 'confetti-piece';
@@ -1100,13 +1066,11 @@ class CheckoutManager {
     showToast(msg) {
         const toast = document.getElementById('toast');
         if (!toast) return;
-
         toast.textContent = msg;
         toast.classList.remove('hidden');
         toast.style.animation = 'none';
         toast.offsetHeight;
         toast.style.animation = 'slideUp 0.3s ease';
-
         setTimeout(() => {
             toast.style.animation = 'fadeOut 0.3s ease forwards';
             setTimeout(() => toast.classList.add('hidden'), 300);
@@ -1114,9 +1078,7 @@ class CheckoutManager {
     }
 
     destroy() {
-        if (this.location) {
-            this.location.stop();
-        }
+        if (this.location) this.location.stop();
         this.stopOrderTracking();
     }
 }
