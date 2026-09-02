@@ -1,6 +1,7 @@
 /* ============================================
    CHECKOUT.CSS - Premium Checkout Modal (Final)
-   Quick Dukan - Cart Theme | Multilingual
+   Quick Dukan - Compact Toggle | Multilingual
+   Updated: Compact Method Toggle | Payment Removed
    ============================================ */
 
 /* ============================================
@@ -154,7 +155,146 @@
 }
 
 /* ============================================
-   5. FORM - Scrollable
+   5. COMPACT ORDER METHOD TOGGLE - TOP
+   ============================================ */
+.order-method-section-top {
+    padding: 8px 16px;
+    background: #FAFAFA;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.order-method-buttons-top {
+    display: flex;
+    gap: 4px;
+    background: #F0F0F0;
+    border-radius: 10px;
+    padding: 3px;
+    position: relative;
+}
+
+/* Compact Toggle Button */
+.order-method-btn-top {
+    flex: 1;
+    height: 38px;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.order-method-btn-top:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.order-method-btn-top:active {
+    transform: scale(0.95);
+}
+
+/* Icon - Compact */
+.order-method-btn-top .method-btn-icon {
+    font-size: 18px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* Text - Compact */
+.order-method-btn-top .method-btn-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    transition: all 0.3s ease;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+/* Checkmark - Small */
+.order-method-btn-top .method-check {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #4CAF50;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: checkPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 1px 4px rgba(76, 175, 80, 0.4);
+    z-index: 2;
+    line-height: 1;
+}
+
+.order-method-btn-top.selected .method-check {
+    display: flex;
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0) rotate(-180deg); }
+    50% { transform: scale(1.3) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* WhatsApp Selected State - Compact */
+.order-method-btn-top.whatsapp-method.selected {
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+    border: 1.5px solid #25D366;
+}
+
+.order-method-btn-top.whatsapp-method.selected .method-btn-text {
+    color: #128C7E;
+    font-weight: 800;
+}
+
+.order-method-btn-top.whatsapp-method.selected .method-btn-icon {
+    transform: scale(1.1);
+}
+
+/* Direct Selected State - Default */
+.order-method-btn-top.direct-method.selected {
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.25);
+    border: 1.5px solid #2196F3;
+}
+
+.order-method-btn-top.direct-method.selected .method-btn-text {
+    color: #1565C0;
+    font-weight: 800;
+}
+
+.order-method-btn-top.direct-method.selected .method-btn-icon {
+    transform: scale(1.1);
+}
+
+/* WhatsApp - Normal (Unselected) */
+.order-method-btn-top.whatsapp-method {
+    background: transparent;
+    border: none;
+}
+
+.order-method-btn-top.whatsapp-method .method-btn-text {
+    color: #666;
+}
+
+/* ============================================
+   6. FORM - Scrollable
    ============================================ */
 .checkout-form {
     flex: 1;
@@ -164,7 +304,7 @@
 }
 
 /* ============================================
-   6. FORM INPUTS - Placeholder as Label
+   7. FORM INPUTS - Placeholder as Label
    ============================================ */
 .form-group {
     margin-bottom: 10px;
@@ -192,10 +332,17 @@
 .form-input.error {
     border-color: #FF4444 !important;
     box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.08) !important;
+    animation: shake 0.3s ease;
 }
 
 .form-input.valid {
     border-color: #4CAF50 !important;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
 }
 
 .form-input::placeholder {
@@ -220,6 +367,7 @@
 
 .phone-input-group.error {
     border-color: #FF4444 !important;
+    animation: shake 0.3s ease;
 }
 
 .phone-prefix {
@@ -304,7 +452,7 @@
 }
 
 /* ============================================
-   7. DELIVERY TIME - Compact 1-Row
+   8. DELIVERY TIME - Compact 1-Row
    ============================================ */
 .delivery-time-section {
     margin-bottom: 10px;
@@ -386,7 +534,7 @@
 }
 
 /* ============================================
-   8. SAVE CHECKBOX
+   9. SAVE CHECKBOX
    ============================================ */
 .save-info-group {
     margin-bottom: 6px;
@@ -431,7 +579,7 @@
 }
 
 /* ============================================
-   9. FOOTER + ORDER BUTTON
+   10. FOOTER + ORDER BUTTON
    ============================================ */
 .checkout-footer {
     padding: 10px 16px;
@@ -551,7 +699,7 @@
 }
 
 /* ============================================
-   10. GPS POPUP
+   11. GPS POPUP
    ============================================ */
 .gps-popup-overlay {
     position: fixed;
@@ -720,7 +868,7 @@
 }
 
 /* ============================================
-   11. CONFETTI
+   12. CONFETTI
    ============================================ */
 .checkout-confetti-container {
     position: absolute;
@@ -747,7 +895,106 @@
 }
 
 /* ============================================
-   12. DARK MODE
+   13. ORDER STATUS POPUP
+   ============================================ */
+.order-status-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.order-status-popup.hidden {
+    display: none;
+}
+
+.order-status-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.order-status-content {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 30px 24px 24px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.order-status-icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+    animation: statusIconPulse 2s infinite;
+}
+
+@keyframes statusIconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.order-status-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.order-status-message {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.order-status-loader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.status-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #E0E0E0;
+    border-top-color: #2E7D32;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.order-status-close-btn {
+    padding: 12px 24px;
+    background: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.order-status-close-btn:hover {
+    background: #1B5E20;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   14. DARK MODE
    ============================================ */
 body.dark-mode .checkout-content {
     background: #1a1f2e;
@@ -761,6 +1008,41 @@ body.dark-mode .checkout-cart-total {
     background: rgba(27, 94, 32, 0.1);
     border-bottom-color: rgba(255, 255, 255, 0.06);
     color: #BBB;
+}
+
+body.dark-mode .order-method-section-top {
+    background: #1E1E1E;
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-mode .order-method-buttons-top {
+    background: #2A2A2A;
+}
+
+body.dark-mode .order-method-btn-top {
+    background: transparent;
+}
+
+body.dark-mode .order-method-btn-top .method-btn-text {
+    color: #AAA;
+}
+
+body.dark-mode .order-method-btn-top.whatsapp-method.selected {
+    background: rgba(37, 211, 102, 0.15);
+    border-color: #25D366;
+}
+
+body.dark-mode .order-method-btn-top.whatsapp-method.selected .method-btn-text {
+    color: #25D366;
+}
+
+body.dark-mode .order-method-btn-top.direct-method.selected {
+    background: rgba(33, 150, 243, 0.15);
+    border-color: #2196F3;
+}
+
+body.dark-mode .order-method-btn-top.direct-method.selected .method-btn-text {
+    color: #42A5F5;
 }
 
 body.dark-mode .form-input {
@@ -847,8 +1129,20 @@ body.dark-mode .checkout-footer {
     border-top-color: rgba(255, 255, 255, 0.06);
 }
 
+body.dark-mode .order-status-content {
+    background: #1E1E1E;
+}
+
+body.dark-mode .order-status-title {
+    color: #E0E0E0;
+}
+
+body.dark-mode .order-status-message {
+    color: #B0B0B0;
+}
+
 /* ============================================
-   13. MOBILE
+   15. MOBILE RESPONSIVE
    ============================================ */
 @media (max-width: 380px) {
     .checkout-modal {
@@ -871,6 +1165,32 @@ body.dark-mode .checkout-footer {
     
     .checkout-header-text h2 {
         font-size: 15px;
+    }
+    
+    .order-method-section-top {
+        padding: 6px 12px;
+    }
+    
+    .order-method-btn-top {
+        height: 34px;
+        padding: 3px 8px;
+        gap: 4px;
+    }
+    
+    .order-method-btn-top .method-btn-icon {
+        font-size: 16px;
+    }
+    
+    .order-method-btn-top .method-btn-text {
+        font-size: 11px;
+    }
+    
+    .order-method-btn-top .method-check {
+        width: 12px;
+        height: 12px;
+        font-size: 8px;
+        top: 2px;
+        right: 2px;
     }
     
     .checkout-form {
@@ -922,6 +1242,14 @@ body.dark-mode .checkout-footer {
         padding: 8px 14px 8px;
     }
     
+    .order-method-section-top {
+        padding: 4px 12px;
+    }
+    
+    .order-method-btn-top {
+        height: 32px;
+    }
+    
     .form-group {
         margin-bottom: 6px;
     }
@@ -931,367 +1259,26 @@ body.dark-mode .checkout-footer {
     }
 }
 
-/* ============================================
-   14. ORDER METHOD BUTTONS - WhatsApp vs Direct
-   ============================================ */
-.order-method-section {
-    margin-top: 12px;
-    margin-bottom: 12px;
-    padding: 12px;
-    background: rgba(46, 125, 50, 0.03);
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.order-method-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    letter-spacing: 0.3px;
-}
-
-.order-method-label .method-icon {
-    font-size: 14px;
-}
-
-.order-method-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.order-method-btn {
-    flex: 1;
-    padding: 12px 10px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    background: #FAFAFA;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    font-family: inherit;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.order-method-btn:active {
-    transform: scale(0.96);
-}
-
-.order-method-btn .method-btn-icon {
-    font-size: 22px;
-    transition: all 0.3s ease;
-}
-
-.order-method-btn .method-btn-text {
-    font-size: 11px;
-    font-weight: 600;
-    color: #666;
-    transition: all 0.3s ease;
-}
-
-.order-method-btn .method-btn-subtext {
-    font-size: 9px;
-    color: #999;
-    transition: all 0.3s ease;
-}
-
-/* WhatsApp Button Selected */
-.order-method-btn.whatsapp-method.selected {
-    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
-    border-color: #25D366;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
-}
-
-.order-method-btn.whatsapp-method.selected .method-btn-text {
-    color: #128C7E;
-    font-weight: 700;
-}
-
-.order-method-btn.whatsapp-method.selected .method-btn-subtext {
-    color: #25D366;
-}
-
-/* Direct Order Button Selected */
-.order-method-btn.direct-method.selected {
-    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-    border-color: #2196F3;
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
-}
-
-.order-method-btn.direct-method.selected .method-btn-text {
-    color: #1565C0;
-    font-weight: 700;
-}
-
-.order-method-btn.direct-method.selected .method-btn-subtext {
-    color: #2196F3;
-}
-
-/* Checkmark badge */
-.order-method-btn .method-check {
+.method-slider {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #4CAF50;
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    animation: checkPop 0.3s ease;
-}
-
-.order-method-btn.selected .method-check {
-    display: flex;
-}
-
-@keyframes checkPop {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-}
-
-/* Dark Mode */
-body.dark-mode .order-method-section {
-    background: rgba(255, 255, 255, 0.02);
-    border-color: rgba(255, 255, 255, 0.06);
-}
-
-body.dark-mode .order-method-label {
-    color: #AAA;
-}
-
-body.dark-mode .order-method-btn {
-    background: #252b3b;
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .order-method-btn .method-btn-text {
-    color: #AAA;
-}
-
-body.dark-mode .order-method-btn .method-btn-subtext {
-    color: #777;
-}
-
-body.dark-mode .order-method-btn.whatsapp-method.selected {
-    background: rgba(37, 211, 102, 0.15);
-    border-color: #25D366;
-}
-
-body.dark-mode .order-method-btn.whatsapp-method.selected .method-btn-text {
-    color: #25D366;
-}
-
-body.dark-mode .order-method-btn.direct-method.selected {
-    background: rgba(33, 150, 243, 0.15);
-    border-color: #2196F3;
-}
-
-body.dark-mode .order-method-btn.direct-method.selected .method-btn-text {
-    color: #42A5F5;
-}
-
-/* Mobile Responsive */
-@media (max-width: 380px) {
-    .order-method-buttons {
-        gap: 6px;
-    }
-    
-    .order-method-btn {
-        padding: 10px 8px;
-    }
-    
-    .order-method-btn .method-btn-icon {
-        font-size: 20px;
-    }
-    
-    .order-method-btn .method-btn-text {
-        font-size: 10px;
-    }
-    
-    .order-method-btn .method-btn-subtext {
-        font-size: 8px;
-    }
-}
-
-/* ============================================
-   PAYMENT METHOD SECTION - Checkout
-   ============================================ */
-.payment-method-section {
-    margin-bottom: 12px;
-    padding: 12px;
-    background: #FAFAFA;
-    border-radius: 12px;
-    border: 2px solid #E0E0E0;
-    animation: paymentMethodIn 0.3s ease;
-}
-
-@keyframes paymentMethodIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.payment-method-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.payment-method-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.payment-method-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: 38px;
     background: white;
-    border: 2px solid #E0E0E0;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: inherit;
-    text-align: left;
-    width: 100%;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 0;
 }
 
-.payment-method-btn:hover {
-    border-color: #2E7D32;
-    background: #F1F8E9;
+/* Direct selected - slider right */
+.order-method-buttons-top.direct-selected .method-slider {
+    left: calc(50% + 0px);
 }
 
-.payment-method-btn.selected {
-    border-color: #2E7D32;
-    background: #E8F5E9;
-    box-shadow: 0 2px 10px rgba(46, 125, 50, 0.15);
-}
-
-.payment-method-btn .pm-icon {
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.payment-method-btn .pm-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: #333;
-    flex: 1;
-}
-
-.payment-method-btn .pm-check {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #BDBDBD;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    color: transparent;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.payment-method-btn.selected .pm-check {
-    background: #2E7D32;
-    border-color: #2E7D32;
-    color: white;
-}
-
-/* Card disabled style */
-.payment-method-btn[data-payment="Card"] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.payment-method-btn[data-payment="Card"]:hover {
-    border-color: #E0E0E0;
-    background: white;
-}
-
-.payment-method-btn[data-payment="Card"] .pm-coming-soon {
-    font-size: 9px;
-    color: #FF9800;
-    font-weight: 700;
-    background: #FFF3E0;
-    padding: 2px 8px;
-    border-radius: 10px;
-}
-
-/* Dark Mode */
-body.dark-mode .payment-method-section {
-    background: #252525;
-    border-color: #333;
-}
-
-body.dark-mode .payment-method-title {
-    color: #AAA;
-}
-
-body.dark-mode .payment-method-btn {
-    background: #2A2A2A;
-    border-color: #444;
-}
-
-body.dark-mode .payment-method-btn:hover {
-    border-color: #4CAF50;
-    background: #1B2E1B;
-}
-
-body.dark-mode .payment-method-btn.selected {
-    border-color: #4CAF50;
-    background: #1B2E1B;
-}
-
-body.dark-mode .payment-method-btn .pm-text {
-    color: #CCC;
-}
-
-body.dark-mode .payment-method-btn .pm-check {
-    border-color: #555;
-}
-
-body.dark-mode .payment-method-btn.selected .pm-check {
-    background: #4CAF50;
-    border-color: #4CAF50;
-}
-
-/* Mobile Responsive */
-@media (max-width: 400px) {
-    .payment-method-section {
-        padding: 10px;
-    }
-    
-    .payment-method-btn {
-        padding: 10px 12px;
-    }
-    
-    .payment-method-btn .pm-icon {
-        font-size: 18px;
-    }
-    
-    .payment-method-btn .pm-text {
-        font-size: 12px;
-    }
+/* Buttons above slider */
+.order-method-btn-top {
+    position: relative;
+    z-index: 1;
 }
