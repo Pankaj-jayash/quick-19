@@ -610,8 +610,8 @@
         </div>
     </div>
     
-   <!-- ============================================ -->
-<!-- CHECKOUT MODAL (FINAL - Compact Toggle) -->
+<!-- ============================================ -->
+<!-- CHECKOUT MODAL (UPDATED - Compact Toggle + No Card) -->
 <!-- ============================================ -->
 <div id="checkoutModal" class="checkout-modal hidden" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
     <div class="checkout-overlay"></div>
@@ -637,37 +637,64 @@
             <span class="total-price" id="checkoutTotal">₹0</span>
         </div>
         
-        <!-- 🆕 COMPACT ORDER METHOD TOGGLE - TOP PE -->
+        <!-- 🆕 COMPACT ORDER METHOD TOGGLE - TOP -->
         <div class="order-method-section-top">
             <div class="order-method-buttons-top">
                 <!-- Sliding Indicator -->
                 <div class="method-slider" id="methodSlider"></div>
                 
-               <!-- WhatsApp Button - selected CLASS HATAO -->
-<button 
-    type="button" 
-    class="order-method-btn-top whatsapp-method" 
-    id="whatsappMethodBtn"
-    data-method="whatsapp"
-    aria-label="WhatsApp पर ऑर्डर करें"
->
-    <span class="method-btn-icon">💬</span>
-    <span class="method-btn-text">WhatsApp</span>
-    <span class="method-check">✓</span>
-</button>
+                <!-- WhatsApp Button -->
+                <button 
+                    type="button" 
+                    class="order-method-btn-top whatsapp-method selected" 
+                    id="whatsappMethodBtn"
+                    data-method="whatsapp"
+                    aria-label="WhatsApp पर ऑर्डर करें"
+                >
+                    <span class="method-btn-icon">💬</span>
+                    <span class="method-btn-text">WhatsApp</span>
+                    <span class="method-check">✓</span>
+                </button>
 
-<!-- Direct Button - selected CLASS LAGAO -->
-<button 
-    type="button" 
-    class="order-method-btn-top direct-method selected" 
-    id="directMethodBtn"
-    data-method="direct"
-    aria-label="सीधे ऐप पर ऑर्डर करें"
->
-    <span class="method-btn-icon">🛒</span>
-    <span class="method-btn-text">Direct</span>
-    <span class="method-check">✓</span>
-</button>
+                <!-- Direct Button -->
+                <button 
+                    type="button" 
+                    class="order-method-btn-top direct-method" 
+                    id="directMethodBtn"
+                    data-method="direct"
+                    aria-label="सीधे ऐप पर ऑर्डर करें"
+                >
+                    <span class="method-btn-icon">🛒</span>
+                    <span class="method-btn-text">Direct</span>
+                    <span class="method-check">✓</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 🆕 PAYMENT METHOD ROW - Only UPI + COD (No Card) -->
+        <div id="paymentMethodSection" class="payment-method-section hidden">
+            <div class="payment-method-row">
+                <!-- UPI Button -->
+                <button 
+                    type="button" 
+                    class="payment-method-btn selected" 
+                    data-payment="UPI"
+                    aria-label="UPI Payment"
+                >
+                    <span class="pm-icon">💳</span>
+                    <span class="pm-text">UPI</span>
+                </button>
+                
+                <!-- COD Button -->
+                <button 
+                    type="button" 
+                    class="payment-method-btn" 
+                    data-payment="COD"
+                    aria-label="Cash on Delivery"
+                >
+                    <span class="pm-icon">🏍️</span>
+                    <span class="pm-text">COD</span>
+                </button>
             </div>
         </div>
         
