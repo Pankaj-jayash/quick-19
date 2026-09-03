@@ -1,6 +1,6 @@
 /* ============================================
-   PAYMENT-ONLINE.CSS - Premium Payment Popup
-   UPI + Card + COD + Service Charge
+   PAYMENT-ONLINE.CSS - Premium UPI Only
+   Big QR | Any UPI | Beautiful Corners | No Scan Line
    ============================================ */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,26 +33,27 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 /* ============================================
-   PAYMENT CARD
+   PAYMENT CARD - Compact Beautiful
    ============================================ */
 .payment-online-card {
     position: relative;
     background: #FFFFFF;
     border-radius: 24px;
-    max-width: 420px;
+    max-width: 380px;
     width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 95vh;
+    overflow: hidden;
     z-index: 1;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
-    animation: paymentCardIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    animation: paymentCardIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes paymentCardIn {
@@ -61,383 +62,351 @@
 }
 
 /* ============================================
-   HEADER
+   CLOSE BUTTON
    ============================================ */
-.payment-online-header {
-    background: linear-gradient(135deg, #1B5E20, #2E7D32);
+.payment-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 15px;
     color: white;
-    padding: 16px 18px;
-    border-radius: 24px 24px 0 0;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 2;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
 }
 
-.payment-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.payment-close-btn:hover {
+    background: #FF4444;
+    transform: rotate(90deg);
+}
+
+/* ============================================
+   HEADER - Gradient
+   ============================================ */
+.payment-online-header {
+    background: linear-gradient(135deg, #1B5E20, #2E7D32, #43A047);
+    color: white;
+    padding: 18px 18px 14px;
+    text-align: center;
+    position: relative;
 }
 
 .payment-header-icon {
-    font-size: 28px;
+    font-size: 34px;
+    display: block;
+    margin-bottom: 4px;
     animation: paymentIconFloat 2s ease-in-out infinite;
 }
 
 @keyframes paymentIconFloat {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-6px); }
 }
 
 .payment-online-header h3 {
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 800;
+    margin: 0 0 2px;
+    letter-spacing: 0.5px;
+}
+
+.payment-online-header p {
+    font-size: 10px;
+    opacity: 0.85;
     margin: 0;
 }
 
-.payment-order-id {
-    font-size: 11px;
-    opacity: 0.8;
-    margin-top: 2px;
-}
-
 /* ============================================
-   AMOUNT SECTION
+   AMOUNT DISPLAY - Compact
    ============================================ */
-.payment-amount-section {
-    padding: 15px 18px;
+.payment-amount-display {
+    text-align: center;
+    padding: 10px 18px 8px;
     background: #FAFAFA;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #E0E0E0;
 }
 
-.amount-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    font-size: 13px;
-    color: #666;
+.amount-label {
+    display: block;
+    font-size: 10px;
+    color: #999;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.amount-row.charge-row {
+.amount-value {
+    display: block;
+    font-size: 26px;
+    font-weight: 800;
+    color: #2E7D32;
+    margin: 2px 0;
+}
+
+.amount-breakup {
+    display: block;
+    font-size: 9px;
     color: #FF9800;
     font-weight: 600;
 }
 
-.amount-row.total-row {
-    border-top: 2px solid #E0E0E0;
-    margin-top: 6px;
-    padding-top: 10px;
-    font-size: 15px;
-    font-weight: 800;
-    color: #333;
-}
-
-.total-amount {
-    color: #2E7D32;
-    font-size: 20px;
-}
-
-.charge-message {
-    background: #FFF8E1;
-    border-left: 3px solid #FF9800;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 10px;
-    color: #E65100;
-    margin-top: 6px;
-    line-height: 1.4;
-}
-
 /* ============================================
-   QR CODE SECTION
+   BIG QR CODE - Beautiful with Corners
    ============================================ */
-.payment-qr-section {
+.payment-qr-big {
     text-align: center;
-    padding: 15px 18px;
+    padding: 12px 18px 8px;
     cursor: pointer;
     transition: background 0.2s ease;
+    flex-shrink: 0;
 }
 
-.payment-qr-section:active {
+.payment-qr-big:active {
     background: #F5F5F5;
 }
 
-.qr-hint {
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 10px;
-    font-weight: 600;
+.qr-frame {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    background: white;
+    border: 2px solid #E0E0E0;
+    border-radius: 18px;
+    box-shadow: 
+        0 4px 25px rgba(46, 125, 50, 0.15),
+        0 0 0 3px #2E7D32,
+        0 0 40px rgba(46, 125, 50, 0.3);
+    margin-bottom: 6px;
+    animation: qrGlow 3s ease-in-out infinite;
 }
 
-.qr-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 8px;
+@keyframes qrGlow {
+    0%, 100% { box-shadow: 0 4px 25px rgba(46, 125, 50, 0.15), 0 0 0 3px #2E7D32, 0 0 40px rgba(46, 125, 50, 0.3); }
+    50% { box-shadow: 0 4px 25px rgba(46, 125, 50, 0.25), 0 0 0 3px #4CAF50, 0 0 60px rgba(76, 175, 80, 0.5); }
 }
 
-.qr-container img {
+.qr-frame img {
+    display: block;
+    border-radius: 10px;
     transition: transform 0.3s ease;
 }
 
-.qr-container img:hover {
-    transform: scale(1.05);
+.qr-frame img:hover {
+    transform: scale(1.02);
 }
 
-.qr-amount {
-    font-size: 20px;
-    font-weight: 800;
-    color: #2E7D32;
-    margin: 5px 0;
+/* Beautiful Corner Decorations */
+.qr-corner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: #25D366;
+    border-style: solid;
+    border-width: 0;
+    z-index: 1;
 }
 
-.qr-upi {
-    font-size: 11px;
-    color: #999;
-    margin-bottom: 8px;
+.qr-corner-tl {
+    top: -2px;
+    left: -2px;
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 12px;
 }
 
-.copy-upi-btn {
-    padding: 8px 16px;
-    background: #E8F5E9;
-    color: #2E7D32;
-    border: none;
-    border-radius: 20px;
+.qr-corner-tr {
+    top: -2px;
+    right: -2px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-top-right-radius: 12px;
+}
+
+.qr-corner-bl {
+    bottom: -2px;
+    left: -2px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-bottom-left-radius: 12px;
+}
+
+.qr-corner-br {
+    bottom: -2px;
+    right: -2px;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+    border-bottom-right-radius: 12px;
+}
+
+.qr-tap-hint {
     font-size: 11px;
     font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
+    color: #2E7D32;
+    margin-bottom: 2px;
 }
 
-.copy-upi-btn:active {
-    transform: scale(0.95);
-    background: #C8E6C9;
-}
-
-/* ============================================
-   DIVIDER
-   ============================================ */
-.payment-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 18px;
-    margin: 8px 0;
-}
-
-.payment-divider::before,
-.payment-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #E0E0E0;
-}
-
-.payment-divider span {
+.qr-upi-id {
     font-size: 10px;
     color: #999;
-    font-weight: 600;
 }
 
 /* ============================================
-   UPI APPS
+   UPI APPS ROW - Compact
    ============================================ */
-.payment-apps-section {
-    padding: 5px 18px 10px;
-}
-
-.apps-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.upi-apps-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 8px;
+.payment-apps-row {
+    display: flex;
+    gap: 6px;
+    padding: 6px 14px;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .upi-app-btn {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 10px 5px;
+    gap: 3px;
+    padding: 7px 4px;
     background: #FAFAFA;
     border: 2px solid #E0E0E0;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 8px;
+    font-weight: 700;
     color: #555;
     transition: all 0.2s ease;
     font-family: inherit;
+    max-width: 65px;
+}
+
+.upi-app-btn:hover {
+    border-color: #2E7D32;
+    background: #E8F5E9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
 }
 
 .upi-app-btn:active {
     transform: scale(0.92);
-    border-color: #2E7D32;
-    background: #E8F5E9;
 }
 
-.app-icon-g {
-    width: 28px;
-    height: 28px;
+.app-icon-g, .app-icon-p, .app-icon-pt, .app-icon-b {
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 12px;
     color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.app-icon-g { background: #4285F4; }
-.app-icon-p { background: #5F259F; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: white; }
-.app-icon-pt { background: #00BAF2; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: white; }
-.app-icon-b { background: #1B5E20; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: white; }
+.app-icon-g { background: linear-gradient(135deg, #4285F4, #3367D6); }
+.app-icon-p { background: linear-gradient(135deg, #7B1FA2, #5F259F); }
+.app-icon-pt { background: linear-gradient(135deg, #00B9F1, #00A0DC); }
+.app-icon-b { background: linear-gradient(135deg, #2E7D32, #1B5E20); }
+
+/* ============================================
+   ANY UPI APP BUTTON
+   ============================================ */
+.payment-any-upi-row {
+    padding: 4px 14px;
+    flex-shrink: 0;
+}
 
 .upi-any-btn {
     width: 100%;
     padding: 10px;
     background: #F5F5F5;
     border: 2px dashed #BDBDBD;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #666;
     transition: all 0.2s ease;
     font-family: inherit;
 }
 
+.upi-any-btn:hover {
+    background: #E8F5E9;
+    border-color: #2E7D32;
+    color: #2E7D32;
+    transform: translateY(-1px);
+}
+
 .upi-any-btn:active {
-    background: #E0E0E0;
     transform: scale(0.97);
 }
 
 /* ============================================
-   CARD SECTION (Disabled)
+   ACTION BUTTONS
    ============================================ */
-.payment-card-section {
-    padding: 5px 18px;
-}
-
-.card-btn-disabled {
-    width: 100%;
+.payment-actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #FAFAFA;
-    border: 2px solid #E0E0E0;
-    border-radius: 12px;
-    cursor: not-allowed;
-    opacity: 0.6;
-    font-family: inherit;
-    text-align: left;
+    gap: 8px;
+    padding: 8px 14px 12px;
+    flex-shrink: 0;
 }
 
-.card-icon {
-    font-size: 24px;
-}
-
-.card-btn-disabled strong {
-    font-size: 13px;
-    color: #666;
-    display: block;
-}
-
-.card-btn-disabled small {
-    font-size: 10px;
-    color: #FF9800;
-    display: block;
-    margin-top: 2px;
-}
-
-/* ============================================
-   COD SECTION
-   ============================================ */
-.payment-cod-section {
-    padding: 5px 18px;
-}
-
-.cod-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px;
+.copy-upi-btn {
+    flex: 1;
+    padding: 11px;
     background: #E8F5E9;
-    border: 2px solid #4CAF50;
+    color: #2E7D32;
+    border: 2px solid #2E7D32;
     border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
-    text-align: left;
 }
 
-.cod-btn:active {
-    transform: scale(0.97);
+.copy-upi-btn:hover {
     background: #C8E6C9;
+    transform: translateY(-1px);
 }
 
-.cod-icon {
-    font-size: 24px;
-}
-
-.cod-btn strong {
-    font-size: 14px;
-    color: #2E7D32;
-    display: block;
-}
-
-.cod-btn small {
-    font-size: 11px;
-    color: #666;
-    display: block;
-    margin-top: 2px;
-}
-
-/* ============================================
-   PAYMENT DONE BUTTON
-   ============================================ */
-.payment-done-section {
-    padding: 12px 18px 18px;
+.copy-upi-btn:active {
+    transform: scale(0.95);
 }
 
 .payment-done-btn {
-    width: 100%;
-    padding: 14px;
+    flex: 2;
+    padding: 11px;
     background: linear-gradient(135deg, #FF9800, #F57C00);
     color: white;
     border: none;
-    border-radius: 14px;
-    font-size: 14px;
+    border-radius: 12px;
+    font-size: 12px;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: inherit;
     box-shadow: 0 4px 15px rgba(255, 152, 0, 0.35);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+}
+
+.payment-done-btn:hover {
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5);
+    transform: translateY(-1px);
 }
 
 .payment-done-btn:active {
     transform: scale(0.95);
     box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
-}
-
-.payment-done-btn:hover {
-    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5);
-    transform: translateY(-2px);
 }
 
 /* ============================================
@@ -447,29 +416,31 @@ body.dark-mode .payment-online-card {
     background: #1E1E1E;
 }
 
-body.dark-mode .payment-amount-section {
+body.dark-mode .payment-amount-display {
     background: #252525;
     border-bottom-color: #333;
 }
 
-body.dark-mode .amount-row {
-    color: #AAA;
+body.dark-mode .amount-value {
+    color: #81C784;
 }
 
-body.dark-mode .amount-row.total-row {
-    border-top-color: #333;
-    color: #DDD;
+body.dark-mode .qr-frame {
+    background: #2A2A2A;
+    border-color: #333;
+    box-shadow: 
+        0 4px 25px rgba(76, 175, 80, 0.2),
+        0 0 0 3px #4CAF50,
+        0 0 40px rgba(76, 175, 80, 0.4);
 }
 
-body.dark-mode .charge-message {
-    background: #2D1B00;
-    border-left-color: #FF9800;
-    color: #FFB74D;
+@keyframes qrGlowDark {
+    0%, 100% { box-shadow: 0 4px 25px rgba(76, 175, 80, 0.2), 0 0 0 3px #4CAF50, 0 0 40px rgba(76, 175, 80, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(76, 175, 80, 0.3), 0 0 0 3px #66BB6A, 0 0 60px rgba(76, 175, 80, 0.6); }
 }
 
-body.dark-mode .payment-divider::before,
-body.dark-mode .payment-divider::after {
-    background: #333;
+body.dark-mode .qr-frame {
+    animation: qrGlowDark 3s ease-in-out infinite;
 }
 
 body.dark-mode .upi-app-btn {
@@ -478,38 +449,39 @@ body.dark-mode .upi-app-btn {
     color: #CCC;
 }
 
+body.dark-mode .upi-app-btn:hover {
+    border-color: #4CAF50;
+    background: #1B2E1B;
+}
+
 body.dark-mode .upi-any-btn {
     background: #2A2A2A;
     border-color: #555;
     color: #AAA;
 }
 
-body.dark-mode .card-btn-disabled {
-    background: #2A2A2A;
-    border-color: #444;
-}
-
-body.dark-mode .card-btn-disabled strong {
-    color: #AAA;
-}
-
-body.dark-mode .cod-btn {
+body.dark-mode .upi-any-btn:hover {
     background: #1B2E1B;
     border-color: #4CAF50;
-}
-
-body.dark-mode .cod-btn small {
-    color: #999;
+    color: #81C784;
 }
 
 body.dark-mode .copy-upi-btn {
     background: #1B2E1B;
     color: #81C784;
+    border-color: #4CAF50;
 }
 
-body.dark-mode .qr-hint,
-body.dark-mode .apps-title {
-    color: #AAA;
+body.dark-mode .qr-tap-hint {
+    color: #81C784;
+}
+
+body.dark-mode .qr-upi-id {
+    color: #777;
+}
+
+body.dark-mode .qr-corner {
+    border-color: #25D366;
 }
 
 /* ============================================
@@ -522,12 +494,64 @@ body.dark-mode .apps-title {
     
     .payment-online-card {
         border-radius: 18px;
-        max-height: 95vh;
     }
     
     .payment-online-header {
-        padding: 12px 14px;
-        border-radius: 18px 18px 0 0;
+        padding: 14px 12px 12px;
+    }
+    
+    .payment-header-icon {
+        font-size: 28px;
+    }
+    
+    .payment-online-header h3 {
+        font-size: 15px;
+    }
+    
+    .amount-value {
+        font-size: 22px;
+    }
+    
+    .qr-frame {
+        padding: 8px;
+    }
+    
+    .qr-frame img {
+        width: 170px !important;
+        height: 170px !important;
+    }
+    
+    .upi-app-btn {
+        max-width: 55px;
+        padding: 5px 3px;
+        font-size: 7px;
+    }
+    
+    .app-icon-g, .app-icon-p, .app-icon-pt, .app-icon-b {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+    
+    .upi-any-btn {
+        padding: 8px;
+        font-size: 10px;
+    }
+    
+    .payment-done-btn {
+        font-size: 11px;
+        padding: 10px;
+    }
+    
+    .copy-upi-btn {
+        font-size: 10px;
+        padding: 10px;
+    }
+}
+
+@media (max-height: 650px) {
+    .payment-online-header {
+        padding: 10px 12px;
     }
     
     .payment-header-icon {
@@ -535,69 +559,46 @@ body.dark-mode .apps-title {
     }
     
     .payment-online-header h3 {
-        font-size: 15px;
+        font-size: 13px;
     }
     
-    .payment-amount-section {
-        padding: 12px 14px;
+    .payment-qr-big {
+        padding: 8px 12px 5px;
     }
     
-    .amount-row {
-        font-size: 12px;
+    .qr-frame {
+        padding: 6px;
     }
     
-    .total-amount {
+    .qr-frame img {
+        width: 130px !important;
+        height: 130px !important;
+    }
+    
+    .amount-value {
         font-size: 18px;
     }
     
-    .payment-qr-section {
-        padding: 12px 14px;
+    .payment-apps-row {
+        padding: 4px 10px;
     }
     
-    .qr-container img {
-        width: 140px !important;
-        height: 140px !important;
+    .payment-any-upi-row {
+        padding: 3px 10px;
     }
     
-    .qr-amount {
-        font-size: 18px;
-    }
-    
-    .upi-apps-grid {
-        gap: 6px;
+    .payment-actions {
+        padding: 6px 10px 8px;
     }
     
     .upi-app-btn {
-        padding: 8px 3px;
-        font-size: 9px;
+        padding: 4px 3px;
+        font-size: 6px;
     }
     
     .app-icon-g, .app-icon-p, .app-icon-pt, .app-icon-b {
-        width: 24px;
-        height: 24px;
-        font-size: 12px;
-    }
-    
-    .payment-done-btn {
-        padding: 12px;
-        font-size: 13px;
-    }
-    
-    .cod-btn {
-        padding: 12px;
-    }
-    
-    .cod-btn strong {
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 320px) {
-    .upi-apps-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .payment-online-card {
-        border-radius: 14px;
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
     }
 }
