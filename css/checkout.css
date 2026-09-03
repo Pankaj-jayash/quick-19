@@ -1,7 +1,6 @@
 /* ============================================
    CHECKOUT.CSS - Premium Checkout Modal (Final)
-   Quick Dukan - Compact Toggle | Multilingual
-   Updated: Compact Method Toggle | Payment Removed
+   Quick Dukan - Compact Toggle | No Card Payment
    ============================================ */
 
 /* ============================================
@@ -158,7 +157,7 @@
    5. COMPACT ORDER METHOD TOGGLE - TOP
    ============================================ */
 .order-method-section-top {
-    padding: 8px 16px;
+    padding: 8px 16px 6px;
     background: #FAFAFA;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
@@ -171,6 +170,25 @@
     border-radius: 10px;
     padding: 3px;
     position: relative;
+}
+
+/* Sliding Indicator */
+.method-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: 38px;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 0;
+}
+
+/* Direct selected - slider right */
+.order-method-buttons-top.direct-selected .method-slider {
+    left: calc(50% + 0px);
 }
 
 /* Compact Toggle Button */
@@ -192,6 +210,7 @@
     overflow: hidden;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    z-index: 1;
 }
 
 .order-method-btn-top:hover {
@@ -283,18 +302,106 @@
     transform: scale(1.1);
 }
 
-/* WhatsApp - Normal (Unselected) */
-.order-method-btn-top.whatsapp-method {
+/* Unselected state */
+.order-method-btn-top.whatsapp-method,
+.order-method-btn-top.direct-method {
     background: transparent;
     border: none;
 }
 
-.order-method-btn-top.whatsapp-method .method-btn-text {
+.order-method-btn-top.whatsapp-method .method-btn-text,
+.order-method-btn-top.direct-method .method-btn-text {
     color: #666;
 }
 
 /* ============================================
-   6. FORM - Scrollable
+   6. PAYMENT METHOD ROW - ULTRA COMPACT (UPI + COD ONLY)
+   ============================================ */
+.payment-method-section {
+    padding: 6px 16px 6px;
+    background: #FAFAFA;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    animation: slideDown 0.25s ease;
+}
+
+.payment-method-section.hidden {
+    display: none;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 50px;
+    }
+}
+
+.payment-method-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Ultra Compact Payment Button */
+.payment-method-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 12px;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    min-height: 34px;
+    font-family: inherit;
+}
+
+.payment-method-btn:hover {
+    border-color: #25D366;
+    background: #f0fff4;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.15);
+}
+
+.payment-method-btn:active {
+    transform: scale(0.96);
+}
+
+.payment-method-btn.selected {
+    border-color: #25D366;
+    background: #25D366;
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+}
+
+/* Payment Icons - Chhota */
+.pm-icon {
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Payment Text - Chhota */
+.pm-text {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* ============================================
+   7. FORM - Scrollable
    ============================================ */
 .checkout-form {
     flex: 1;
@@ -304,7 +411,7 @@
 }
 
 /* ============================================
-   7. FORM INPUTS - Placeholder as Label
+   8. FORM INPUTS - Placeholder as Label
    ============================================ */
 .form-group {
     margin-bottom: 10px;
@@ -332,17 +439,10 @@
 .form-input.error {
     border-color: #FF4444 !important;
     box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.08) !important;
-    animation: shake 0.3s ease;
 }
 
 .form-input.valid {
     border-color: #4CAF50 !important;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
 }
 
 .form-input::placeholder {
@@ -367,7 +467,6 @@
 
 .phone-input-group.error {
     border-color: #FF4444 !important;
-    animation: shake 0.3s ease;
 }
 
 .phone-prefix {
@@ -452,7 +551,7 @@
 }
 
 /* ============================================
-   8. DELIVERY TIME - Compact 1-Row
+   9. DELIVERY TIME - Compact 1-Row
    ============================================ */
 .delivery-time-section {
     margin-bottom: 10px;
@@ -534,7 +633,7 @@
 }
 
 /* ============================================
-   9. SAVE CHECKBOX
+   10. SAVE CHECKBOX
    ============================================ */
 .save-info-group {
     margin-bottom: 6px;
@@ -579,7 +678,7 @@
 }
 
 /* ============================================
-   10. FOOTER + ORDER BUTTON
+   11. FOOTER + ORDER BUTTON
    ============================================ */
 .checkout-footer {
     padding: 10px 16px;
@@ -699,7 +798,7 @@
 }
 
 /* ============================================
-   11. GPS POPUP
+   12. GPS POPUP
    ============================================ */
 .gps-popup-overlay {
     position: fixed;
@@ -868,7 +967,7 @@
 }
 
 /* ============================================
-   12. CONFETTI
+   13. CONFETTI
    ============================================ */
 .checkout-confetti-container {
     position: absolute;
@@ -895,105 +994,6 @@
 }
 
 /* ============================================
-   13. ORDER STATUS POPUP
-   ============================================ */
-.order-status-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.order-status-popup.hidden {
-    display: none;
-}
-
-.order-status-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-}
-
-.order-status-content {
-    position: relative;
-    background: #FFFFFF;
-    border-radius: 20px;
-    padding: 30px 24px 24px;
-    max-width: 340px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.order-status-icon {
-    font-size: 64px;
-    margin-bottom: 12px;
-    animation: statusIconPulse 2s infinite;
-}
-
-@keyframes statusIconPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.order-status-title {
-    font-size: 18px;
-    font-weight: 800;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.order-status-message {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 16px;
-}
-
-.order-status-loader {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
-}
-
-.status-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #E0E0E0;
-    border-top-color: #2E7D32;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-.order-status-close-btn {
-    padding: 12px 24px;
-    background: #2E7D32;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.order-status-close-btn:hover {
-    background: #1B5E20;
-    transform: translateY(-2px);
-}
-
-/* ============================================
    14. DARK MODE
    ============================================ */
 body.dark-mode .checkout-content {
@@ -1010,6 +1010,7 @@ body.dark-mode .checkout-cart-total {
     color: #BBB;
 }
 
+/* Dark Mode - Compact Toggle */
 body.dark-mode .order-method-section-top {
     background: #1E1E1E;
     border-bottom-color: rgba(255, 255, 255, 0.06);
@@ -1017,6 +1018,11 @@ body.dark-mode .order-method-section-top {
 
 body.dark-mode .order-method-buttons-top {
     background: #2A2A2A;
+}
+
+body.dark-mode .method-slider {
+    background: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .order-method-btn-top {
@@ -1043,6 +1049,29 @@ body.dark-mode .order-method-btn-top.direct-method.selected {
 
 body.dark-mode .order-method-btn-top.direct-method.selected .method-btn-text {
     color: #42A5F5;
+}
+
+/* Dark Mode - Payment Row */
+body.dark-mode .payment-method-section {
+    background: #1E1E1E;
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-mode .payment-method-btn {
+    background: #252b3b;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #AAA;
+}
+
+body.dark-mode .payment-method-btn:hover {
+    border-color: #25D366;
+    background: rgba(37, 211, 102, 0.1);
+}
+
+body.dark-mode .payment-method-btn.selected {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
 }
 
 body.dark-mode .form-input {
@@ -1129,18 +1158,6 @@ body.dark-mode .checkout-footer {
     border-top-color: rgba(255, 255, 255, 0.06);
 }
 
-body.dark-mode .order-status-content {
-    background: #1E1E1E;
-}
-
-body.dark-mode .order-status-title {
-    color: #E0E0E0;
-}
-
-body.dark-mode .order-status-message {
-    color: #B0B0B0;
-}
-
 /* ============================================
    15. MOBILE RESPONSIVE
    ============================================ */
@@ -1168,7 +1185,7 @@ body.dark-mode .order-status-message {
     }
     
     .order-method-section-top {
-        padding: 6px 12px;
+        padding: 4px 12px 2px;
     }
     
     .order-method-btn-top {
@@ -1191,6 +1208,33 @@ body.dark-mode .order-status-message {
         font-size: 8px;
         top: 2px;
         right: 2px;
+    }
+    
+    .method-slider {
+        height: 34px;
+    }
+    
+    .payment-method-section {
+        padding: 4px 12px 4px;
+    }
+    
+    .payment-method-row {
+        gap: 4px;
+    }
+    
+    .payment-method-btn {
+        padding: 5px 8px;
+        min-height: 28px;
+        border-radius: 7px;
+        gap: 4px;
+    }
+    
+    .pm-icon {
+        font-size: 13px;
+    }
+    
+    .pm-text {
+        font-size: 10px;
     }
     
     .checkout-form {
@@ -1243,11 +1287,32 @@ body.dark-mode .order-status-message {
     }
     
     .order-method-section-top {
-        padding: 4px 12px;
+        padding: 3px 12px 2px;
     }
     
     .order-method-btn-top {
         height: 32px;
+    }
+    
+    .method-slider {
+        height: 32px;
+    }
+    
+    .payment-method-section {
+        padding: 3px 12px 3px;
+    }
+    
+    .payment-method-btn {
+        padding: 4px 6px;
+        min-height: 26px;
+    }
+    
+    .pm-icon {
+        font-size: 12px;
+    }
+    
+    .pm-text {
+        font-size: 9px;
     }
     
     .form-group {
@@ -1257,28 +1322,4 @@ body.dark-mode .order-status-message {
     .form-input {
         padding: 8px 10px;
     }
-}
-
-.method-slider {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: calc(50% - 3px);
-    height: 38px;
-    background: white;
-    border-radius: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 0;
-}
-
-/* Direct selected - slider right */
-.order-method-buttons-top.direct-selected .method-slider {
-    left: calc(50% + 0px);
-}
-
-/* Buttons above slider */
-.order-method-btn-top {
-    position: relative;
-    z-index: 1;
 }
